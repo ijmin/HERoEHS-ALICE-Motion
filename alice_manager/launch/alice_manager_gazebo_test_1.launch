@@ -3,16 +3,18 @@
 <launch>    
 	
     <!-- Check USER ID -->
-    	
+    
+    <!--
     <arg name="host_name"          		 		 value="$(env ALICE_HOST)"/>
 	
     <arg name="id1_truth"             		 value="$(eval host_name=='alice1nuke')"/>
     <arg name="id2_truth"             		 value="$(eval host_name=='alice2nuke')"/>
+        
     <arg name="alice_uid" value="1" unless="$(arg id2_truth)" /> 
     <arg name="alice_uid" value="2" unless="$(arg id1_truth)" /> 
-    
+    -->
     	
-    <!--<arg name="alice_uid" value="1" />--> 
+    <arg name="alice_uid" value="1" />
     
     <param name="alice_userid"             	 value="$(arg alice_uid)"/>
  
@@ -22,8 +24,8 @@
     
     <arg name="robot_id1_truth"             		 value="$(eval alice_uid==1)"/>
     <arg name="robot_id2_truth"             		 value="$(eval alice_uid==2)"/> 	
-    <arg name="robot_name" 	value="alice_2_robot" 	unless="$(arg robot_id2_truth)" />
-    <arg name="robot_name" 	value="alice_1_robot" 	unless="$(arg robot_id1_truth)" />
+    <arg name="robot_name" 	value="alice_2_robot" 	unless="$(arg robot_id1_truth)" />
+    <arg name="robot_name" 	value="alice_1_robot" 	unless="$(arg robot_id2_truth)" />
       
     <param name="gazebo_robot_name"        	 value="$(arg robot_name)" />
    	    	
@@ -39,13 +41,14 @@
     <node name="alice_manager_node" pkg="alice_manager" type="alice_manager_node" output="screen"/>
     <!--<node name="decision_module" pkg="decision_module" type="decision_module" output="screen"/>-->
     
-    <!-- algorithm -->
+     <!-- algorithm -->
     <node name="alice_foot_step_planner" pkg="alice_foot_step_planner" type="alice_foot_step_planner" output="screen"/>
     <node name="alice_foot_step_generator" pkg="alice_foot_step_generator" type="alice_foot_step_generator" output="screen"/>
-   	
+   		
+    	
     <!-- Robot Model & TF -->
     <arg name="robot_tf_file"             		 value="alice_$(arg alice_uid)_description"/>
     <include file="$(eval find(arg('robot_tf_file'))+'/launch/alice_soccer_motion.launch')"/> 	
-    	
+
 </launch>
 

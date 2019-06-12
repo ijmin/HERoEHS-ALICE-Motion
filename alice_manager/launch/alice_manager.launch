@@ -3,7 +3,8 @@
 <launch>    
 	
     <!-- Check USER ID -->
-    	
+	
+    
     <arg name="host_name"          		 		 value="$(env ALICE_HOST)"/>
 	
     <arg name="id1_truth"             		 value="$(eval host_name=='alice1nuke')"/>
@@ -11,14 +12,14 @@
     <arg name="alice_uid" value="1" unless="$(arg id2_truth)" /> 
     <arg name="alice_uid" value="2" unless="$(arg id1_truth)" /> 
     
-    	
-    <!--<arg name="alice_uid" value="1" />--> 
-    
+    <!--
+    <arg name="alice_uid" value="1" /> 
+    -->
     <param name="alice_userid"             	 value="$(arg alice_uid)"/>
- 
+  		
     <!-- GAZEBO Robot Setting -->	
     	
-    <param name="gazebo"                 	 value="true"      type="bool"/>
+    <param name="gazebo"                 	 value="false"      type="bool"/>
     
     <arg name="robot_id1_truth"             		 value="$(eval alice_uid==1)"/>
     <arg name="robot_id2_truth"             		 value="$(eval alice_uid==2)"/> 	
@@ -26,7 +27,7 @@
     <arg name="robot_name" 	value="alice_1_robot" 	unless="$(arg robot_id1_truth)" />
       
     <param name="gazebo_robot_name"        	 value="$(arg robot_name)" />
-   	    	
+  	
     <!-- YAML FILE LOAD -->
     <param name="offset_file_path"           value="$(find alice_manager)/config/offset_$(arg alice_uid).yaml"/>
     <param name="robot_file_path"            value="$(find alice_manager)/config/alice2_$(arg alice_uid).robot"/>
@@ -34,18 +35,25 @@
    		   
     <param name="balance_param_path"         value="$(find alice_foot_step_planner)/data/balance_param$(arg alice_uid).yaml"/>
     <param name="joint_feedback_path"        value="$(find alice_foot_step_planner)/data/joint_feedback_gain$(arg alice_uid).yaml"/>
-   
+     
     <!-- alice Manager -->
     <node name="alice_manager_node" pkg="alice_manager" type="alice_manager_node" output="screen"/>
     <!--<node name="decision_module" pkg="decision_module" type="decision_module" output="screen"/>-->
     
+    <!-- sensors -->
+    <!-- <node name="ft_node" pkg="diana_sensors" type="ft_node"/>-->
+
+    <!--
+    <include file="$(find microstrain_3dm_gx5_45)/launch/microstrain.launch"/> 
+    -->
+
+
     <!-- algorithm -->
     <node name="alice_foot_step_planner" pkg="alice_foot_step_planner" type="alice_foot_step_planner" output="screen"/>
     <node name="alice_foot_step_generator" pkg="alice_foot_step_generator" type="alice_foot_step_generator" output="screen"/>
-   	
+   			
     <!-- Robot Model & TF -->
     <arg name="robot_tf_file"             		 value="alice_$(arg alice_uid)_description"/>
     <include file="$(eval find(arg('robot_tf_file'))+'/launch/alice_soccer_motion.launch')"/> 	
-    	
+    	  	
 </launch>
-

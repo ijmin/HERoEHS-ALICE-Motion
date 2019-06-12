@@ -15,6 +15,10 @@
 #include "robotis_framework_common/singleton.h"
 #include "heroehs_math/kinematics.h"
 
+#include <string>
+#include <yaml-cpp/yaml.h>
+#include <ros/package.h>
+
 namespace alice
 {
 
@@ -29,6 +33,9 @@ public:
 
   void process();
   bool isRunning();
+
+  void readKinematicsYamlData();
+  double pelvis_to_hip_, total_mass_,online_walking_pelvis_h_;
 
   void addStepData(robotis_framework::StepData& step_data);
   void eraseLastStepData();
@@ -71,14 +78,35 @@ public:
   double current_imu_roll_rad_, current_imu_pitch_rad_;
   double current_gyro_roll_rad_per_sec_, current_gyro_pitch_rad_per_sec_;
 
+  // yitaek
   Eigen::MatrixXd mat_right_force_, mat_left_force_;
+  Eigen::MatrixXd mat_g_right_force_, mat_g_left_force_;
   Eigen::MatrixXd mat_right_torque_, mat_left_torque_;
+  Eigen::MatrixXd mat_g_right_torque_,mat_g_left_torque_;
+  Eigen::MatrixXd mat_g_right_foot_, mat_g_left_foot_;
+  Eigen::MatrixXd mat_robot_right_foot_, mat_robot_left_foot_;
+  //
+
   double current_right_fx_N_,  current_right_fy_N_,  current_right_fz_N_;
   double current_right_tx_Nm_, current_right_ty_Nm_, current_right_tz_Nm_;
   double current_left_fx_N_,  current_left_fy_N_,  current_left_fz_N_;
   double current_left_tx_Nm_, current_left_ty_Nm_, current_left_tz_Nm_;
 
  Eigen::MatrixXd mat_g_to_acc_, mat_robot_to_acc_;
+
+
+ //yitaek test
+
+ double reference_zmp_x_ , reference_zmp_y_;
+ double reference_body_x_, reference_body_y_;
+
+ double reference_foot_left_x_,reference_foot_left_y_,reference_foot_left_z_;
+ double reference_foot_right_x_,reference_foot_right_y_,reference_foot_right_z_;
+
+ double current_foot_left_x_,current_foot_left_y_,current_foot_left_z_;
+ double current_foot_right_x_,current_foot_right_y_,current_foot_right_z_;
+
+ double pre_reference_body_x;
 
 private:
   heroehs::OnlineWalkingPatternGenerator walking_pattern_;

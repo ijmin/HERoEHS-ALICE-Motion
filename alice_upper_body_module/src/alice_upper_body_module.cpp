@@ -39,9 +39,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
 	end_to_rad_head_->cal_end_point_tra_betta->current_pose = 20*DEGREE2RADIAN;
 	end_to_rad_head_->current_pose_change(4,0) = 20*DEGREE2RADIAN;
 
-	//tracking initial value
-	control_angle_yaw  = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
-	control_angle_pitch = end_to_rad_head_  ->cal_end_point_tra_betta->current_pose;
+	//temp_pre_pitch = 20*DEGREE2RADIAN; // low pass filter initialize
 
 
 	for(int joint_num_= 3; joint_num_< 6 ; joint_num_ ++)  // waist 3, 5번 // head 345 초기화
@@ -117,10 +115,10 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 	}
 	else
 	{
-		//	printf("-------------------\n\n");
-		//	printf("RESULT YAW   ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
-		//	printf("RESULT PITCH ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
-		//	printf("-------------------\n\n");
+		//printf("-------------------\n\n");
+		//printf("RESULT YAW   ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
+		//printf("RESULT PITCH ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
+		//printf("-------------------\n\n");
 		result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
 		result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
 	}
@@ -131,8 +129,8 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 	temp_pre_pitch = temp_head_pitch;
 	temp_pre_yaw   = temp_head_yaw;*/
 
-	//logSaveFile();
 	ball_detected = 0;
+	//	logSaveFile();
 }
 void UpperBodyModule::stop()
 {
@@ -306,7 +304,7 @@ void UpperBodyModule::scanning_motion()
 		}
 	}
 
-	/*	if(leg_check == 1)
+/*	if(leg_check == 1)
 		waist_end_point_(3, 1) = 0;*/
 
 	current_time_scanning = current_time_scanning + 0.008;
@@ -433,39 +431,37 @@ void UpperBodyModule::tracking_function()
 	control_angle_yaw_temp   = pidController_x->PID_calculate(desired_x, current_x);
 	control_angle_pitch_temp = pidController_y->PID_calculate(desired_y, current_y);
 
-	//	printf("control_angle_yaw_temp PID ::  %f \n", control_angle_yaw_temp);
-	//	printf("control_angle_pitch_temp  PID::  %f \n", control_angle_pitch_temp);
-
 	if(fabs(desired_x - current_x) < 25)
 	{
 		control_angle_yaw_temp = 0;
 	}
-
-	if(fabs(desired_y - current_y) < 20)
+	if(fabs(desired_y - current_y) < 15)
 	{
 		control_angle_pitch_temp = 0;
 	}
 
+
+	//	printf("X   control value ::  %f \n", control_angle_yaw_temp);
+	//	printf("Y   control value ::  %f \n", control_angle_pitch_temp);
+
 	control_angle_yaw   = control_angle_yaw + control_angle_yaw_temp;
 	control_angle_pitch = control_angle_pitch - control_angle_pitch_temp;
-
-	/*	printf("control_angle_yaw_temp ::  %f \n", control_angle_yaw_temp);
-	printf("control_angle_pitch_temp ::  %f \n", control_angle_pitch_temp);
-
-	printf("control_angle_yaw ::  %f \n", control_angle_yaw);
-	printf("control_angle_pitch ::  %f \n", control_angle_pitch);*/
 
 	control_angle_yaw = limitCheck(control_angle_yaw,60,-60);
 	control_angle_pitch = limitCheck(control_angle_pitch,75,0);
 
-	/*	printf("control_angle_yaw limit check::  %f \n", control_angle_yaw);
-	printf("control_angle_pitch limit check ::  %f \n", control_angle_pitch);*/
-
-	//printf("control_angle_yaw ::  %f \n", control_angle_yaw);
-	//printf("control_angle_pitch ::  %f \n", control_angle_pitch);
-
 	head_end_point_(3, 1)  = control_angle_yaw;
 	head_end_point_(4, 1)  = control_angle_pitch;
+
+	//head_end_point_(3, 7)  = 0.8;
+	//head_end_point_(4, 7)  = 0.8;
+
+	//printf("***************\n\n");
+	//printf("YAW  control value ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
+	//printf("PITCH control value ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
+	//printf("**************\n\n");
+	//pre_current_x = current_x;
+	//pre_current_y = current_y;
 
 }
 void UpperBodyModule::algorithm_process(uint8_t command_)
@@ -555,28 +551,13 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
 		control_angle_yaw   = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
 		control_angle_pitch = end_to_rad_head_  ->cal_end_point_tra_betta->current_pose;
 	}
-	else if(command_ == 5)// tracking algorithm
-	{
-
-		head_end_point_(3, 7)   = 0.2;
-		head_end_point_(4, 7)   = 0.2;
-
-		waist_end_point_(3, 1)  = 0; // yaw  트레젝토리 6 * 8 은 xyz yaw(z) pitch(y) roll(x) 이며 8은 처음 위치 나중 위치 / 속도 속도 / 가속도 가속도 / 시간 시간 / 임
-
-		current_time_scanning = 0.0;
-		motion_num_scanning = 1;
-		current_time_finding = 0;
-		motion_num_finding = 1;
-
-		tracking_function();
-	}
 	else
 		return;
 
 }
 void UpperBodyModule::logSaveFile()
 {
-	/*	string filePath = ros::package::getPath("alice_upper_body_module") + "/log_data/log_data.txt";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
+	/*string filePath = ros::package::getPath("alice_upper_body_module") + "/log_data/log_data.txt";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
 
 	// write File
 	ofstream writeFile;

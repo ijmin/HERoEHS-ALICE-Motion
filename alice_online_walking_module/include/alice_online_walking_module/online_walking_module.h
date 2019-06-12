@@ -15,6 +15,10 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <boost/thread.hpp>
 
+#include <string>
+#include <yaml-cpp/yaml.h>
+#include <ros/package.h>
+
 #include "alice_online_walking_module/alice_online_walking.h"
 #include "robotis_framework_common/motion_module.h"
 
@@ -50,6 +54,9 @@ public:
 
   void stop();
   bool isRunning();
+
+  void readKinematicsYamlData();
+  double leg_to_end_;
 
 private:
   void publishRobotPose(void);
@@ -92,6 +99,9 @@ private:
 
   void setJointFeedBackGain(alice_walking_module_msgs::JointFeedBackGain& msg);
   void updateJointFeedBackGain();
+
+  //yitake zmp output
+  void realZmpCalculate(Eigen::Matrix4d g_right_foot, Eigen::Matrix4d g_left_foot, Eigen::MatrixXd g_right_force, Eigen::MatrixXd g_left_force , Eigen::MatrixXd g_right_torque, Eigen::MatrixXd g_left_torque);
 
   std::map<std::string, int> joint_name_to_index_;
 
@@ -137,6 +147,44 @@ private:
   alice_walking_module_msgs::BalanceParam desired_balance_param_;
 
   heroehs::OnlineWalkingPatternGenerator online_walking;
+
+  //yitaek test
+  ros::Publisher reference_zmp_pub_;
+  ros::Publisher reference_body_pub_;
+  ros::Publisher foot_right_pub_;
+  ros::Publisher foot_left_pub_;
+
+  ros::Publisher left_force_sensor_pub_;
+  ros::Publisher right_force_sensor_pub_;
+  ros::Publisher left_torque_sensor_pub_;
+  ros::Publisher right_torque_sensor_pub_;
+
+  ros::Publisher angle_sensor_pub_;
+  ros::Publisher angle_acc_sensor_pub_;
+
+  geometry_msgs::Vector3 angle_sensor_msg_;
+  geometry_msgs::Vector3 angle_acc_sensor_msg_;
+
+  geometry_msgs::Vector3 left_force_sensor_msg_;
+  geometry_msgs::Vector3 right_force_sensor_msg_;
+
+  geometry_msgs::Vector3 left_torque_sensor_msg_;
+  geometry_msgs::Vector3 right_torque_sensor_msg_;
+
+  geometry_msgs::Vector3 reference_zmp_msg_;
+  geometry_msgs::Vector3 reference_body_msg_;
+
+  geometry_msgs::Vector3 foot_right_msg_;
+  geometry_msgs::Vector3 foot_left_msg_;
+
+  //yitaek zmp output
+  double temp_right_zmp_x, temp_left_zmp_x;
+  double temp_right_zmp_y, temp_left_zmp_y;
+  double real_zmp_x, real_zmp_y;
+
+  ros::Publisher real_zmp_pub_;
+  geometry_msgs::Vector3 real_zmp_msg_;
+
 };
 
 }

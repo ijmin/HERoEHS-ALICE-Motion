@@ -12,6 +12,10 @@
 #include "kinematics_dynamics_define.h"
 #include "link_data.h"
 
+#include <string>
+#include <yaml-cpp/yaml.h>
+#include <ros/package.h>
+
 namespace alice
 {
 
@@ -22,6 +26,11 @@ class KinematicsDynamics
 public:
   KinematicsDynamics();
   ~KinematicsDynamics();
+
+  void readKinematicsYamlData();
+  YAML::Node kinematics_doc_;
+  std::string kine_link_name_[ALL_JOINT_ID];
+
 
   std::vector<int> findRoute(int to);
   std::vector<int> findRoute(int from, int to);
@@ -55,6 +64,27 @@ public:
   double calf_length_m_;
   double ankle_length_m_;
   double leg_side_offset_m_;
+
+  //yi
+  Eigen::MatrixXd H[8];
+  Eigen::MatrixXd H_ground_to_center;
+
+  // inverse_kinematics leg
+  double real_theta[7] , dh_alpha[7] , dh_link[7] , dh_link_d[7]; // dh_convention variables
+  double total_length_;
+  double sensor_length_;
+  Eigen::Matrix4d P_;
+  Eigen::Matrix4d P_inverse_;
+
+  //
+  Eigen::MatrixXd joint_radian;
+  Eigen::MatrixXd center_to_sensor_transform_right;
+  Eigen::MatrixXd center_to_sensor_transform_left;
+  Eigen::MatrixXd center_to_foot_transform_left_leg;
+  Eigen::MatrixXd center_to_foot_transform_right_leg;
+
+  bool KinematicsGraig();
+  void FowardKinematics(double joint[7], std::string left_right);
 };
 
 }

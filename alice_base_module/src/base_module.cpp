@@ -57,7 +57,7 @@ BaseModule::BaseModule()
 	result_["head_roll"]        = new robotis_framework::DynamixelState();  // joint 25
 	 */
 
-	// TEST
+	//// TEST
 	result_["l_hip_pitch"]      = new robotis_framework::DynamixelState();  // joint 11
 	result_["l_hip_roll"]       = new robotis_framework::DynamixelState();  // joint 13
 	result_["l_hip_yaw"]        = new robotis_framework::DynamixelState();  // joint 15
@@ -65,7 +65,7 @@ BaseModule::BaseModule()
 	result_["l_ankle_pitch"]    = new robotis_framework::DynamixelState();  // joint 19
 	result_["l_ankle_roll"]     = new robotis_framework::DynamixelState();  // joint 21
 
-	result_["r_hip_pitch"]      = new robotis_framework::DynamixelState();  // joint 12
+  result_["r_hip_pitch"]      = new robotis_framework::DynamixelState();  // joint 12
 	result_["r_hip_roll"]       = new robotis_framework::DynamixelState();  // joint 14
 	result_["r_hip_yaw"]        = new robotis_framework::DynamixelState();  // joint 16
 	result_["r_knee_pitch"]     = new robotis_framework::DynamixelState();  // joint 18
@@ -80,8 +80,8 @@ BaseModule::BaseModule()
 
 	result_["l_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 1
 	result_["r_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 2
-	//result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
 
+	//result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
 	//result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
 	//result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
 	//result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
@@ -96,10 +96,22 @@ BaseModule::BaseModule()
 	joint_name_to_ini_pose_goal_.clear();
 	joint_name_to_id_.clear();
 	joint_id_to_name_.clear();
+	readIDData();
 }
 BaseModule::~BaseModule()
 {
 	queue_thread_.join();
+}
+
+void BaseModule::readIDData()
+{
+  ros::NodeHandle nh;
+  int alice_id_int  = nh.param<int>("alice_userid",0);
+
+  //ROS_INFO("Base id: %d",alice_id_int);
+  std::stringstream alice_id_stream;
+  alice_id_stream << alice_id_int;
+  alice_id_ = alice_id_stream.str();
 }
 void BaseModule::initialize(const int control_cycle_msec, robotis_framework::Robot *robot)
 {
@@ -146,7 +158,8 @@ void BaseModule::parse_init_pose_data_(const std::string &path)
 		id = it->first.as<int>();
 		value = it->second.as<double>();
 		joint_name_to_ini_pose_goal_[joint_id_to_name_[id]] = value * DEGREE2RADIAN; // YAML에 로드된 초기 포즈 값을 라디안으로 바꾸고, eigen matrix 에 id 개수만큼 열을 생성한다.
-	}
+	  //ROS_INFO("YAML : %s :: %f\n", joint_id_to_name_[id].c_str(),joint_name_to_ini_pose_goal_[joint_id_to_name_[id]]);
+  }
 }
 void BaseModule::parse_init_offset_pose_data_(const std::string &path, const std::string &data)
 {
@@ -188,8 +201,9 @@ void BaseModule::initPoseMsgCallback(const std_msgs::String::ConstPtr& msg) // G
 	printf("%s", msg->data.c_str());
 	if(msg->data.compare("init_pose") == 0)
 	{
-		init_pose_path = ros::package::getPath("alice_base_module") + "/data/init_pose.yaml";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
+		init_pose_path = ros::package::getPath("alice_base_module") + "/data/init_pose_"+alice_id_+".yaml";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
 		ROS_INFO("FILE LOAD  ::  init_pose");
+		ROS_INFO("%s", init_pose_path.c_str());
 	}
 	else
 		return;
@@ -234,9 +248,13 @@ void BaseModule::process(std::map<std::string, robotis_framework::Dynamixel *> d
 				state_iter != dxls.end(); state_iter++)
 		{
 			std::string joint_name = state_iter->first;
+      //ROS_INFO("ON Process!!!!");
 			if(gazebo_check == true)
+      {
+        //ROS_INFO("GAZEBO_CHECK!!!!");
 				result_[joint_name]->goal_position_ = result_[joint_name]->present_position_; // 가제보 상 초기위치 0
-			else
+      }
+      else
 				/*if(dxls[joint_name]->direction_==1)
 				{
 					result_[joint_name]->goal_position_ = dxls[joint_name]->dxl_state_->present_position_; // 다이나믹셀에서 읽어옴
@@ -251,13 +269,17 @@ void BaseModule::process(std::map<std::string, robotis_framework::Dynamixel *> d
 					//printf("value == - 1 ::  %s  :: %f \n", joint_name.c_str(), -dxls[joint_name]->dxl_state_->present_position_);
 				}*/
 			{
+        //ROS_INFO("GAZEBO NO!!!!!");
 				result_[joint_name]->goal_position_ = dxls[joint_name]->dxl_state_->present_position_; // 다이나믹셀에서 읽어옴
 				joint_name_to_ini_pose_state_[joint_name] = dxls[joint_name]->dxl_state_->present_position_; // 초기위치 저장
 			}
-			//printf("value1 ::  %s  :: %f", joint_name.c_str(), dxls[joint_name]->dxl_state_->present_position_);
-		} // 등록된 다이나믹셀의 위치값을 읽어와서 goal position 으로 입력
+			printf("value1 ::  %s  :: %f\n", joint_name.c_str(),dxls[joint_name]->dxl_state_->present_position_);
+		  printf("ini_p  :: %s   :: %f\n", joint_name.c_str(),joint_name_to_ini_pose_state_[joint_name]);
+    } // 등록된 다이나믹셀의 위치값을 읽어와서 goal position 으로 입력
 		ROS_INFO("Base module :: Read position and Send goal position");
+    printf("mov_time_state : %f",mov_time_state);
 	}
+ 
 	// trajectory is working joint space control
 	if(is_moving_state == false)
 	{
@@ -268,32 +290,34 @@ void BaseModule::process(std::map<std::string, robotis_framework::Dynamixel *> d
 			std::string joint_name = state_iter->first;
 		} // 등록된 다이나믹셀  goal position 으로 입력
 	}
+  
 	else
 	{
-		//ROS_INFO("Base Trajectory Start");
-		for (std::map<std::string, robotis_framework::Dynamixel*>::iterator state_iter = dxls.begin();
+    for (std::map<std::string, robotis_framework::Dynamixel*>::iterator state_iter = dxls.begin();
 				state_iter != dxls.end(); state_iter++)
 		{
 			std::string joint_name = state_iter->first;
 			result_[joint_name]->goal_position_ =  motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
 					joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
 
-			/*		if(dxls[joint_name]->direction_==1)
-			{
-				result_[joint_name]->goal_position_ =  motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
-						joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
-			}
-
-			else
-			{
-				result_[joint_name]->goal_position_ =  -motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
-						joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
-			}*/
+			//if(dxls[joint_name]->direction_==1)
+		  //{
+		  //	result_[joint_name]->goal_position_ =  motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
+		  //			joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
+	    //}
+      //
+			//else
+			//{
+			//	result_[joint_name]->goal_position_ =  -motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
+		 	//			joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
+			//}
 			is_moving_state = motion_trajectory[joint_name]->is_moving_traj;
 
 			printf("value2 ::  %s :: %f \n", joint_name.c_str(), result_[joint_name]->goal_position_);
 		} // 등록된 다이나믹셀  goal position 으로 입력
-	}
+	
+  }
+  
 }
 void BaseModule::stop()
 {

@@ -20,11 +20,9 @@ find_package(catkin REQUIRED
   #heroehs_online_walking_pattern_generator
   #heroehs_pd_balance_controller
   alice_base_module
-  alice_leg_module
   alice_upper_body_module
   alice_balance_control
   alice_online_walking_module
-  alice_op3_walking_module
 )
 
 find_package(Eigen3 REQUIRED)
@@ -54,14 +52,9 @@ include_directories(
 )
 
 add_executable(alice_manager_node src/alice_manager_node.cpp)
-add_executable(alice_manager_python_node src/alice_manager_python_node.cpp)
 
 add_dependencies(alice_manager_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(alice_manager_python_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(alice_manager_node
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(alice_manager_python_node
   ${catkin_LIBRARIES}
 )
