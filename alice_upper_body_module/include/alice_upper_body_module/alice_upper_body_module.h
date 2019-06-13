@@ -105,6 +105,7 @@ public:
 	void ballTestParamMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
 
 	void walkingModuleStatusMsgCallback(const robotis_controller_msgs::StatusMsg::ConstPtr& msg);
+	void readIDData();
 
 	bool leg_check;
 
@@ -188,9 +189,7 @@ private:
 	double current_robot_x, current_robot_y;
 	double current_robot_theta;
 	geometry_msgs::Vector3 robot_state_msg;
-
-
-
+	std::string alice_id_;
 
 };
 

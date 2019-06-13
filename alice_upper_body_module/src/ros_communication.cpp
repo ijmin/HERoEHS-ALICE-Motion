@@ -20,11 +20,12 @@ UpperBodyModule::UpperBodyModule()
 	enable_       = false;
 	module_name_  = "upper_body_module";
 	control_mode_ = robotis_framework::PositionControl;
-
+	readIDData();
 	// Dynamixel initialize ////
-	//result_["waist_pitch"]  = new robotis_framework::DynamixelState(); // joint 10
-	result_["waist_yaw"] = new robotis_framework::DynamixelState(); // joint 9
-
+	if(alice_id_ == "2")
+	{
+	  result_["waist_yaw"] = new robotis_framework::DynamixelState(); // joint 9
+	}
 	result_["head_pitch"]   = new robotis_framework::DynamixelState(); // joint 7
 	result_["head_yaw"]   = new robotis_framework::DynamixelState(); // joint 8
 
@@ -70,7 +71,7 @@ UpperBodyModule::UpperBodyModule()
 	temp_pre_yaw = 0;
 
 	// tracking
-	command = 0;
+	command = -1;
 	pidController_x = new control_function::PID_function(0.008,60*DEGREE2RADIAN,-60*DEGREE2RADIAN,0,0,0);
 	pidController_y = new control_function::PID_function(0.008,75*DEGREE2RADIAN,0*DEGREE2RADIAN,0,0,0);
 
@@ -377,6 +378,15 @@ void UpperBodyModule::ballTestParamMsgCallback(const std_msgs::Float64MultiArray
 	//printf("P value ::  %f \n",y_p_gain );
 	//printf("D P value ::  %f \n",y_d_gain );
 }
+void UpperBodyModule::readIDData()
+{
+  ros::NodeHandle nh;
+  int alice_id_int  = nh.param<int>("alice_userid",0);
 
+  //ROS_INFO("Base id: %d",alice_id_int);
+  std::stringstream alice_id_stream;
+  alice_id_stream << alice_id_int;
+  alice_id_ = alice_id_stream.str();
+}
 
 

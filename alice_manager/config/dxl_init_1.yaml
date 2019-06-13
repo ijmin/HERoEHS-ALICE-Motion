@@ -87,18 +87,6 @@ head_yaw:
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
   
-waist_pitch: 
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
-waist_yaw: 
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
   
 
 l_shoulder_pitch: 
@@ -107,12 +95,7 @@ l_shoulder_pitch:
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-l_shoulder_roll: 
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
+
 l_elbow_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
@@ -126,12 +109,7 @@ r_shoulder_pitch:
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-r_shoulder_roll: 
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
+
 r_elbow_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 116

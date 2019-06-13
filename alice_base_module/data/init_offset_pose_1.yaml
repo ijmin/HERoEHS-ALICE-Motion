@@ -15,7 +15,7 @@ tar_pose :
   7  :  0.0 		# head_yaw
   8  :  0.0 		# head_pitch
 
-  9  :  0.0 		# waist_yaw
+#  9  :  0.0 		# waist_yaw
 #  10 :  0.0 		# waist_pitch
 
   11 : 0.0		 # l_hip_pitch 
