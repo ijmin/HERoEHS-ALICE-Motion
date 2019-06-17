@@ -89,7 +89,6 @@ void ALICEOnlineWalking::readKinematicsYamlData()
   pelvis_to_hip_ = kinematics_doc["l_leg_hip_p"]["relative_position"][1].as<double>();
   total_mass_= kinematics_doc["total_mass"].as<double>();
   online_walking_pelvis_h_= kinematics_doc["online_walking_pelvis_h"].as<double>();
-  online_walking_foot_default_yaw_=  kinematics_doc["online_walking_foot_yaw"].as<double>()*M_PI/180;
   lipm_height_m_=kinematics_doc["lipm_height_m"].as<double>();
 }
 
@@ -104,10 +103,10 @@ void ALICEOnlineWalking::initialize(double control_cycle_sec)
   // global frame 에서 의 좌표
   robotis_framework::Pose3D r_foot, l_foot, pelvis;
   r_foot.x = 0.0;    r_foot.y = -pelvis_to_hip_;  r_foot.z = 0.0;
-  r_foot.roll = 0.0; r_foot.pitch = 0.0; r_foot.yaw = -online_walking_foot_default_yaw_;
+  r_foot.roll = 0.0; r_foot.pitch = 0.0; r_foot.yaw = 0;
 
   l_foot.x = 0.0;    l_foot.y = pelvis_to_hip_;   l_foot.z = 0.0;
-  l_foot.roll = 0.0; l_foot.pitch = 0.0; l_foot.yaw = online_walking_foot_default_yaw_;
+  l_foot.roll = 0.0; l_foot.pitch = 0.0; l_foot.yaw = 0;
 
   pelvis.x = 0.0;    pelvis.y = 0.0;     pelvis.z = online_walking_pelvis_h_;
   pelvis.roll = 0.0; pelvis.pitch = 0.0; pelvis.yaw = 0;
@@ -116,7 +115,7 @@ void ALICEOnlineWalking::initialize(double control_cycle_sec)
 
 
   walking_pattern_.setInitialPose(r_foot, l_foot, pelvis); // global 좌표가 들어감
-  walking_pattern_.initialize(0.4, 1.6, control_cycle_sec); //왜 1.6초 인지
+  walking_pattern_.initialize(lipm_height_m_, 1.6, control_cycle_sec); //왜 1.6초 인지
   //why 0.4???--> lipm_height_m??????
 
 
