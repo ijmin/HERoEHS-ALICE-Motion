@@ -441,4 +441,6 @@ foot_pose: [0.0, 0.09, 0.55, 0, 0, 0]
 lipm_height_m: 0.7
 total_mass: 18.4
 online_walking_pelvis_h: 0.57
-  
+online_walking_foot_yaw: 0.0
+
+

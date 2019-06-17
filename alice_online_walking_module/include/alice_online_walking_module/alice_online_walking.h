@@ -35,7 +35,10 @@ public:
   bool isRunning();
 
   void readKinematicsYamlData();
-  double pelvis_to_hip_, total_mass_,online_walking_pelvis_h_;
+  double pelvis_to_hip_, total_mass_;
+  double online_walking_pelvis_h_;
+  double online_walking_foot_default_yaw_;
+  double lipm_height_m_;
 
   void addStepData(robotis_framework::StepData& step_data);
   void eraseLastStepData();
