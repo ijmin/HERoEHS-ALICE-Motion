@@ -120,6 +120,13 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //printf("RESULT YAW   ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
     //printf("RESULT PITCH ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
     //printf("-------------------\n\n");
+    result_[joint_id_to_name_[1]]-> goal_position_  =  0; // l_shoulder_pitch
+    result_[joint_id_to_name_[2]]-> goal_position_  =  0; // r_shoulder_pitch
+    //result_[joint_id_to_name_[3]]-> goal_position_  =  0; // l_shoulder_roll
+    //result_[joint_id_to_name_[4]]-> goal_position_  =  0; // r_shoulder_roll
+    //result_[joint_id_to_name_[5]]-> goal_position_  =  0; // l_elbow_pitch
+    //result_[joint_id_to_name_[6]]-> goal_position_  =  0; // r_elbow_pitch
+
     result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
   }

@@ -15,6 +15,10 @@ offset:
   r_hip_yaw: 0  #0.001342897289692232
   r_knee_pitch: 0 #0.02351617620471014
   r_shoulder_pitch: 0 #-0.0030679609375
+  l_shoulder_roll: 0
+  r_shoulder_roll: 0
+  l_elbow_pitch: 0
+  r_elbow_pitch: 0
 init_pose_for_offset_tuner:
   head_pitch: 0
   head_yaw: 0
@@ -32,3 +36,7 @@ init_pose_for_offset_tuner:
   r_hip_yaw: 0
   r_knee_pitch: 0
   r_shoulder_pitch: 0
+  l_shoulder_roll: 0
+  r_shoulder_roll: 0
+  l_elbow_pitch: 0
+  r_elbow_pitch: 0

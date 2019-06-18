@@ -116,6 +116,23 @@ r_elbow_pitch:
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
+  
+  #############
+l_shoulder_roll: 
+  return_delay_time: 10 
+  second_goal_pos_addr1: 116
+  second_goal_pos_addr2: 117
+  second_goal_pos_addr3: 118
+  second_goal_pos_addr4: 119
+
+r_shoulder_roll: 
+  return_delay_time: 10
+  second_goal_pos_addr1: 116
+  second_goal_pos_addr2: 117
+  second_goal_pos_addr3: 118
+  second_goal_pos_addr4: 119
+  
+  
 
 
 
