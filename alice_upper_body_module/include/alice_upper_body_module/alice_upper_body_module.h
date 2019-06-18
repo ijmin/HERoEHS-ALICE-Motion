@@ -72,6 +72,7 @@ public:
 
 	bool gazebo_check;
 	double traj_time_test;
+
 	// publisher
 	ros::Publisher  scan_done_pub;
 	ros::Publisher  robot_state_pub;
@@ -190,6 +191,10 @@ private:
 	double current_robot_theta;
 	geometry_msgs::Vector3 robot_state_msg;
 	std::string alice_id_;
+
+
+	void parse_init_pose_data_(const std::string &path);
+  std::map<int, std::map<int,double> > motion_numb_to_pose_;
 
 };
 

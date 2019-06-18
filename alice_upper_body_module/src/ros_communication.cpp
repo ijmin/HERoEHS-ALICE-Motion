@@ -136,6 +136,7 @@ void UpperBodyModule::queueThread()
 	ros::NodeHandle ros_node;
 	ros::CallbackQueue callback_queue;
 	ros_node.setCallbackQueue(&callback_queue);
+
 	// publish topics
 	scan_done_pub = ros_node.advertise<std_msgs::Bool>("/heroehs/alice/scan_done", 1);
 	robot_state_pub = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice/robot_state", 1);

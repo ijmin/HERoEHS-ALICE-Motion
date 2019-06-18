@@ -1,0 +1,21 @@
+1 : 
+  l_shoulder_pitch: 10
+  r_shoulder_pitch: 0
+  l_shoulder_roll: 0
+  r_shoulder_roll: 40
+  l_elbow_pitch: 0
+  r_elbow_pitch: 0
+2 : 
+  l_shoulder_pitch: 0
+  r_shoulder_pitch: 20
+  l_shoulder_roll: 0
+  r_shoulder_roll: 50
+  l_elbow_pitch: 0
+  r_elbow_pitch: 30
+3 : 
+  l_shoulder_pitch: 0
+  r_shoulder_pitch: 90
+  l_shoulder_roll: 0
+  r_shoulder_roll: 0
+  l_elbow_pitch: 0
+  r_elbow_pitch: 10

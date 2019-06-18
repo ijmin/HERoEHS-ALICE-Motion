@@ -56,7 +56,8 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   //	writeFile << "\n";
   //	writeFile.close();
   //}
-
+  std::string path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
+  parse_init_pose_data_(path);
   ROS_INFO("< -------  Initialize Module : Upper Body Module  [HEAD  && WAIST] !!  ------->");
 }
 double UpperBodyModule::limitCheck(double calculated_value, double max, double min)
@@ -583,6 +584,58 @@ void UpperBodyModule::logSaveFile()
 }
 
 
+void UpperBodyModule::parse_init_pose_data_(const std::string &path)
+{
+  YAML::Node doc;
+  try
+  {
+    doc = YAML::LoadFile(path.c_str());
+
+  }catch(const std::exception& e)
+  {
+    ROS_ERROR("Fail to load yaml file!");
+    return;
+  }
+
+
+  for(YAML::iterator it = doc.begin(); it != doc.end(); ++it)
+  {
+    int motion_numb = it->first.as<int>();
+    YAML::Node tar_pose_node = doc[motion_numb];
+
+
+    std::map<int,double> motion_to_pose_map_;
+    for (YAML::iterator it = tar_pose_node.begin(); it != tar_pose_node.end(); ++it)
+    {
+      std::string joint_name = it->first.as<std::string>();
+      motion_to_pose_map_[joint_name_to_id_[joint_name]] = it->second.as<double>();
+      //ROS_INFO("%d  |  %s : %f",motion_numb,joint_name.c_str(),motion_to_pose_map_[joint_name_to_id_[joint_name]]);
+    }
+    motion_numb_to_pose_[motion_numb]=motion_to_pose_map_;
+  }
+  /*
+  ROS_INFO("%f", motion_numb_to_pose_[1][1]);
+  ROS_INFO("%f", motion_numb_to_pose_[1][2]);
+  ROS_INFO("%f", motion_numb_to_pose_[1][3]);
+  ROS_INFO("%f", motion_numb_to_pose_[1][4]);
+  ROS_INFO("%f", motion_numb_to_pose_[1][5]);
+  ROS_INFO("%f", motion_numb_to_pose_[1][6]);
+
+  ROS_INFO("%f", motion_numb_to_pose_[2][1]);
+  ROS_INFO("%f", motion_numb_to_pose_[2][2]);
+  ROS_INFO("%f", motion_numb_to_pose_[2][3]);
+  ROS_INFO("%f", motion_numb_to_pose_[2][4]);
+  ROS_INFO("%f", motion_numb_to_pose_[2][5]);
+  ROS_INFO("%f", motion_numb_to_pose_[2][6]);
+
+  ROS_INFO("%f", motion_numb_to_pose_[3][1]);
+  ROS_INFO("%f", motion_numb_to_pose_[3][2]);
+  ROS_INFO("%f", motion_numb_to_pose_[3][3]);
+  ROS_INFO("%f", motion_numb_to_pose_[3][4]);
+  ROS_INFO("%f", motion_numb_to_pose_[3][5]);
+  ROS_INFO("%f", motion_numb_to_pose_[3][6]);
+ */
+}
 
 
 
