@@ -127,7 +127,7 @@ head_p: #7
   child: 27
   mass: 0.724
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0, 1.0, 0.0]
+  joint_axis: [0.0, -1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 0.5
   joint_limit_min: -0.5
@@ -190,7 +190,7 @@ l_arm_el_y: #5
   child: 23
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0,0.0, 1.0]
+  joint_axis: [0.0, -1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 0.45
   joint_limit_min: -0.45
@@ -241,7 +241,7 @@ r_arm_el_y: #6
   child: 24
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0,0.0, 1.0]
+  joint_axis: [0.0,-1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 0.45
   joint_limit_min: -0.45
@@ -268,7 +268,7 @@ l_leg_hip_y: #11
   child: 17
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0, -1.0, 0.0]
+  joint_axis: [0.0, 1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 2.0
   joint_limit_min: -2.0
@@ -280,7 +280,7 @@ l_leg_hip_r: #13
   child: 11
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [-1.0, 0.0, 0.0]
+  joint_axis: [1.0, 0.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 2.0
   joint_limit_min: -2.0
@@ -355,7 +355,7 @@ r_leg_hip_y: #12
   child: 18
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0, 1.0, 0.0]
+  joint_axis: [0.0, -1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 2.0
   joint_limit_min: -2.0
@@ -367,7 +367,7 @@ r_leg_hip_r: #14
   child: 12
   mass: 1.0
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [-1.0, 0.0, 0.0]
+  joint_axis: [1.0, 0.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 2.0
   joint_limit_min: -2.0
