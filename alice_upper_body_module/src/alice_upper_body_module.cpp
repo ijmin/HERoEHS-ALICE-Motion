@@ -39,7 +39,28 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   end_to_rad_head_->cal_end_point_tra_betta->current_pose = 20*DEGREE2RADIAN;
   end_to_rad_head_->current_pose_change(4,0) = 20*DEGREE2RADIAN;
 
-  //temp_pre_pitch = 20*DEGREE2RADIAN; // low pass filter initialize
+  //arm
+  l_shoulder_pitch_goal = 0;
+  r_shoulder_pitch_goal = 0;
+  l_shoulder_roll_goal = 0;
+  r_shoulder_roll_goal = 0;
+  l_elbow_pitch_goal = 0;
+  r_elbow_pitch_goal = 0;
+
+  l_shoulder_pitch_trj -> initial_pose = 0;
+  r_shoulder_pitch_trj -> initial_pose = 0;
+  l_shoulder_roll_trj -> initial_pose = 0;
+  r_shoulder_roll_trj -> initial_pose = 0;
+  l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
+  r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
+
+  l_shoulder_pitch_trj -> current_pose = 0;
+  r_shoulder_pitch_trj -> current_pose = 0;
+  l_shoulder_roll_trj -> current_pose = 0;
+  r_shoulder_roll_trj -> current_pose = 0;
+  l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
+  r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
+
 
 
   for(int joint_num_= 3; joint_num_< 6 ; joint_num_ ++)  // waist 3, 5번 // head 345 초기화
@@ -47,15 +68,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
     waist_end_point_(joint_num_, 7) = 3.0;
     head_end_point_ (joint_num_, 7) = 3.0;
   }
-  //string filePath = ros::package::getPath("alice_upper_body_module") + "/log_data/log_data.txt";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
 
-  // write File
-  //ofstream writeFile;
-  //writeFile.open(filePath.c_str());
-  //if( writeFile.is_open() ){ // control yaw control pitch result yaw result pitch current x current y ball detected
-  //	writeFile << "\n";
-  //	writeFile.close();
-  //}
   std::string path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
   parse_init_pose_data_(path);
   ROS_INFO("< -------  Initialize Module : Upper Body Module  [HEAD  && WAIST] !!  ------->");
@@ -116,25 +129,25 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   }
   else
   {
+    if(alice_id_ =="2")
+    {
+      //arm_motion();
+      result_[joint_id_to_name_[9]] -> goal_position_  = result_rad_waist_ (3,0); // waist yaw
+    }
 
     //printf("-------------------\n\n");
     //printf("RESULT YAW   ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
     //printf("RESULT PITCH ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
     //printf("-------------------\n\n");
-    result_[joint_id_to_name_[1]]-> goal_position_  =  0; // l_shoulder_pitch
-    result_[joint_id_to_name_[2]]-> goal_position_  =  0; // r_shoulder_pitch
-    //result_[joint_id_to_name_[3]]-> goal_position_  =  0; // l_shoulder_roll
-    //result_[joint_id_to_name_[4]]-> goal_position_  =  0; // r_shoulder_roll
-    //result_[joint_id_to_name_[5]]-> goal_position_  =  0; // l_elbow_pitch
-    //result_[joint_id_to_name_[6]]-> goal_position_  =  0; // r_elbow_pitch
+    result_[joint_id_to_name_[1]]-> goal_position_  =  l_shoulder_pitch_goal; // l_shoulder_pitch
+    result_[joint_id_to_name_[2]]-> goal_position_  =  r_shoulder_pitch_goal; // r_shoulder_pitch
+    result_[joint_id_to_name_[3]]-> goal_position_  =  l_shoulder_roll_goal; // l_shoulder_roll
+    result_[joint_id_to_name_[4]]-> goal_position_  =  r_shoulder_roll_goal; // r_shoulder_roll
+    result_[joint_id_to_name_[5]]-> goal_position_  =  l_elbow_pitch_goal; // l_elbow_pitch
+    result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
 
     result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
-  }
-
-  if(alice_id_ =="2")
-  {
-    result_[joint_id_to_name_[9]] -> goal_position_  = result_rad_waist_ (3,0); // waist yaw
   }
 
   /*	temp_pre_roll  = temp_head_roll;
@@ -567,21 +580,6 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
     return;
 
 }
-void UpperBodyModule::logSaveFile()
-{
-  /*string filePath = ros::package::getPath("alice_upper_body_module") + "/log_data/log_data.txt";// 로스 패키지에서 YAML파일의 경로를 읽어온다.
-
-	// write File
-	ofstream writeFile;
-
-	writeFile.open(filePath.c_str(), ios::app);
-
-	if( writeFile.is_open() ){ // control yaw control pitch result yaw result pitch current x current y ball detected
-		writeFile << "COMMAND ::  " << (int) command << " |  "<< control_angle_yaw_temp*RADIAN2DEGREE << " , "<< control_angle_pitch_temp*RADIAN2DEGREE << " | " << result_rad_head_(3,0)*RADIAN2DEGREE<< " , " << result_rad_head_(4,0)*RADIAN2DEGREE << " | " << current_x << " , " << current_y << " | " << ball_detected << "\n";
-		writeFile.close();
-	}
-	return;*/
-}
 
 
 void UpperBodyModule::parse_init_pose_data_(const std::string &path)
@@ -608,29 +606,50 @@ void UpperBodyModule::parse_init_pose_data_(const std::string &path)
 
     motion_numb_to_joint_pose_data_[motion_numb]=motion_pose_node[motion_numb].as<std::vector<double> >();
   }
+}
+void UpperBodyModule::arm_motion()
+{
+  Eigen::MatrixXd value;
+  value.resize(1,8);
+  value.fill(0);
+  static int motion_num_ = 1;
 
-  /*
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][0]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][1]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][2]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][3]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][4]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[1][5]);
 
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][0]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][1]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][2]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][3]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][4]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[2][5]);
+  if (current_time_arm_motion <= motion_time_data_[motion_num_-1] )
+  {
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][0]*DEGREE2RADIAN;
+    l_shoulder_pitch_goal = l_shoulder_pitch_trj -> fifth_order_traj_gen_one_value(value);
 
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][0]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][1]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][2]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][3]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][4]);
-  ROS_INFO("%f", motion_numb_to_joint_pose_data_[3][5]);
-  */
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][1]*DEGREE2RADIAN;
+    r_shoulder_pitch_goal = r_shoulder_pitch_trj -> fifth_order_traj_gen_one_value(value);
+
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][2]*DEGREE2RADIAN;
+    l_shoulder_roll_goal = l_shoulder_roll_trj -> fifth_order_traj_gen_one_value(value);
+
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][3]*DEGREE2RADIAN;
+    r_shoulder_roll_goal = r_shoulder_roll_trj -> fifth_order_traj_gen_one_value(value);
+
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][4]*DEGREE2RADIAN;
+    l_elbow_pitch_goal = l_elbow_pitch_trj -> fifth_order_traj_gen_one_value(value);
+
+    value(0,7) = motion_time_data_[motion_num_-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][5]*DEGREE2RADIAN;
+    r_elbow_pitch_goal = r_elbow_pitch_trj -> fifth_order_traj_gen_one_value(value);
+
+  }
+  else
+  {
+    motion_num_++;
+    if(motion_num_> motion_numb_to_joint_pose_data_.size()+1)
+      motion_num_=1;
+    current_time_arm_motion=0;
+  }
+  current_time_arm_motion = current_time_arm_motion + 0.008;
 }
 
 

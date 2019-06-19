@@ -32,10 +32,10 @@ UpperBodyModule::UpperBodyModule()
 	result_["l_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 1
 	result_["r_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 2
 
- // result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
- // result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
- // result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
- // result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
+  result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
+  result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
+  result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
+  result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
 
 	///////////////////////////
 	// motion control variables
@@ -113,6 +113,16 @@ UpperBodyModule::UpperBodyModule()
 	motion_num_scanning = 0;
 	current_time_finding = 0;
 	motion_num_finding = 0;
+
+	current_time_arm_motion = 0;
+	motion_num_arm_motion = 1;
+
+	l_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
+	r_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
+	l_shoulder_roll_trj  = new heroehs_math::FifthOrderTrajectory;
+	r_shoulder_roll_trj  = new heroehs_math::FifthOrderTrajectory;
+	l_elbow_pitch_trj    = new heroehs_math::FifthOrderTrajectory;
+	r_elbow_pitch_trj    = new heroehs_math::FifthOrderTrajectory;
 
 	leg_check = 0;
 	ball_detected = 0;

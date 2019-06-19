@@ -82,10 +82,10 @@ BaseModule::BaseModule()
 
 	result_["l_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 1
 	result_["r_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 2
-  //result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
-  //result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
-  //result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
-  //result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
+  result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
+  result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
+  result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
+  result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
 
 
 	//init
@@ -256,19 +256,6 @@ void BaseModule::process(std::map<std::string, robotis_framework::Dynamixel *> d
 				result_[joint_name]->goal_position_ = result_[joint_name]->present_position_; // 가제보 상 초기위치 0
       }
       else
-				/*if(dxls[joint_name]->direction_==1)
-				{
-					result_[joint_name]->goal_position_ = dxls[joint_name]->dxl_state_->present_position_; // 다이나믹셀에서 읽어옴
-					joint_name_to_ini_pose_state_[joint_name] = dxls[joint_name]->dxl_state_->present_position_; // 초기위치 저장
-					//printf("value == 1 ::  %s  :: %d \n", joint_name.c_str(), dxls[joint_name]->direction_);
-				}
-
-				else
-				{
-					result_[joint_name]->goal_position_ = dxls[joint_name]->dxl_state_->present_position_; // 다이나믹셀에서 읽어옴
-					joint_name_to_ini_pose_state_[joint_name] = dxls[joint_name]->dxl_state_->present_position_; // 초기위치 저장
-					//printf("value == - 1 ::  %s  :: %f \n", joint_name.c_str(), -dxls[joint_name]->dxl_state_->present_position_);
-				}*/
 			{
         //ROS_INFO("GAZEBO NO!!!!!");
 				result_[joint_name]->goal_position_ = dxls[joint_name]->dxl_state_->present_position_; // 다이나믹셀에서 읽어옴
@@ -301,17 +288,6 @@ void BaseModule::process(std::map<std::string, robotis_framework::Dynamixel *> d
 			result_[joint_name]->goal_position_ =  motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
 					joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
 
-			//if(dxls[joint_name]->direction_==1)
-		  //{
-		  //	result_[joint_name]->goal_position_ =  motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
-		  //			joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
-	    //}
-      //
-			//else
-			//{
-			//	result_[joint_name]->goal_position_ =  -motion_trajectory[joint_name]->fifth_order_traj_gen(joint_name_to_ini_pose_state_[joint_name],
-		 	//			joint_name_to_ini_pose_goal_[joint_name],0,0,0,0,0,mov_time_state);
-			//}
 			is_moving_state = motion_trajectory[joint_name]->is_moving_traj;
 
 			printf("value2 ::  %s :: %f \n", joint_name.c_str(), result_[joint_name]->goal_position_);

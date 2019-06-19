@@ -148,6 +148,7 @@ private:
 	void scanning_motion();
 	void finding_motion();
 	void tracking_function();
+	void arm_motion();
 	uint8_t command;
 
 	//tracking control function
@@ -180,9 +181,29 @@ private:
 	int motion_num_scanning;
 	double current_time_finding;
 	int motion_num_finding;
+	double current_time_arm_motion;
+	int motion_num_arm_motion;
 
-	//log file
-	void logSaveFile();
+	//motion
+
+  heroehs_math::FifthOrderTrajectory *l_shoulder_pitch_trj;
+  heroehs_math::FifthOrderTrajectory *r_shoulder_pitch_trj;
+  heroehs_math::FifthOrderTrajectory *l_shoulder_roll_trj;
+  heroehs_math::FifthOrderTrajectory *r_shoulder_roll_trj;
+  heroehs_math::FifthOrderTrajectory *l_elbow_pitch_trj;
+  heroehs_math::FifthOrderTrajectory *r_elbow_pitch_trj;
+
+  double l_shoulder_pitch_goal;
+  double r_shoulder_pitch_goal;
+
+  double l_shoulder_roll_goal;
+  double r_shoulder_roll_goal;
+
+  double l_elbow_pitch_goal;
+  double r_elbow_pitch_goal;
+
+
+
 
 	// detected objects and absolute
 	double current_goal_x,current_goal_y;
