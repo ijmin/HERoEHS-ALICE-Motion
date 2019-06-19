@@ -141,10 +141,10 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //printf("-------------------\n\n");
     result_[joint_id_to_name_[1]]-> goal_position_  =  l_shoulder_pitch_goal; // l_shoulder_pitch
     result_[joint_id_to_name_[2]]-> goal_position_  =  r_shoulder_pitch_goal; // r_shoulder_pitch
-    result_[joint_id_to_name_[3]]-> goal_position_  =  l_shoulder_roll_goal; // l_shoulder_roll
-    result_[joint_id_to_name_[4]]-> goal_position_  =  r_shoulder_roll_goal; // r_shoulder_roll
-    result_[joint_id_to_name_[5]]-> goal_position_  =  l_elbow_pitch_goal; // l_elbow_pitch
-    result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
+    //result_[joint_id_to_name_[3]]-> goal_position_  =  l_shoulder_roll_goal; // l_shoulder_roll
+    //result_[joint_id_to_name_[4]]-> goal_position_  =  r_shoulder_roll_goal; // r_shoulder_roll
+    //result_[joint_id_to_name_[5]]-> goal_position_  =  l_elbow_pitch_goal; // l_elbow_pitch
+    //result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
 
     result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
