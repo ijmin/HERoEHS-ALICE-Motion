@@ -194,8 +194,9 @@ private:
 
 
 	void parse_init_pose_data_(const std::string &path);
-  std::map<int, std::map<int,double> > motion_numb_to_pose_;
-
+  std::vector<std::string> motion_joint_data_;
+  std::map<int, std::vector<double> > motion_numb_to_joint_pose_data_;
+  std::vector<double> motion_time_data_;
 };
 
 }
