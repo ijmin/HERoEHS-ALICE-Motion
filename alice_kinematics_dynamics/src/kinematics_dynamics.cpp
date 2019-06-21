@@ -73,8 +73,8 @@ void KinematicsDynamics::readKinematicsYamlData()
     ROS_ERROR("Fail to load kinematics yaml file!");
     return;
   }
-  ROS_INFO("printed_kinematics yaml data!");
-  ROS_INFO("%s",kinematics_path.c_str());
+  //ROS_INFO("printed_kinematics yaml data!");
+  //ROS_INFO("%s",kinematics_path.c_str());
    
   std::string temp_kine_link_name[ALL_JOINT_ID]={
       "base",
