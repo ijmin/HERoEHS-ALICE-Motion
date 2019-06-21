@@ -104,6 +104,11 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   algorithm_process(command);
 
+//  printf("-------------------\n\n");
+//  printf("RESULT YAW   ::  %f \n\n",result_rad_head_(3,0)*RADIAN2DEGREE);
+//  printf("RESULT PITCH ::  %f \n\n",result_rad_head_(4,0)*RADIAN2DEGREE);
+//  printf("-------------------\n\n");
+
 
   head_end_point_(3,1) = limitCheck(head_end_point_(3,1),60,-60);
   head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
@@ -135,10 +140,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
       result_[joint_id_to_name_[9]] -> goal_position_  = result_rad_waist_ (3,0); // waist yaw
     }
 
-    //printf("-------------------\n\n");
-    //printf("RESULT YAW   ::  %f \n\n",control_angle_yaw*RADIAN2DEGREE);
-    //printf("RESULT PITCH ::  %f \n\n",control_angle_pitch*RADIAN2DEGREE);
-    //printf("-------------------\n\n");
+
     result_[joint_id_to_name_[1]]-> goal_position_  =  l_shoulder_pitch_goal; // l_shoulder_pitch
     result_[joint_id_to_name_[2]]-> goal_position_  =  r_shoulder_pitch_goal; // r_shoulder_pitch
     //result_[joint_id_to_name_[3]]-> goal_position_  =  l_shoulder_roll_goal; // l_shoulder_roll
@@ -146,7 +148,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //result_[joint_id_to_name_[5]]-> goal_position_  =  l_elbow_pitch_goal; // l_elbow_pitch
     //result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
 
-    result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
+    result_[joint_id_to_name_[7]]-> goal_position_  =  -result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
   }
 
@@ -500,7 +502,7 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
     //waist_end_point_(4, 1) = 0; // pitch
 
     head_end_point_(3, 1)  = 0; // yaw  트레젝토리 6 * 8 은 xyz yaw(z) pitch(y) roll(x) 이며 8은 처음 위치 나중 위치 / 속도 속도 / 가속도 가속도 / 시간 시간 / 임
-    head_end_point_(4, 1)  = 20*DEGREE2RADIAN; // pitch
+    head_end_point_(4, 1)  = -20*DEGREE2RADIAN; // pitch
 
     //18 06 15
     current_time_scanning = 0.0;

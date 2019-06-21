@@ -86,8 +86,8 @@ UpperBodyModule::UpperBodyModule()
 	control_angle_pitch_temp = 0;
 	pre_current_x = 0;
 	pre_current_y = 0;
-	frame_x = 672;
-	frame_y = 376;
+	frame_x = 1280;
+	frame_y = 720;
 	int margin_desired_x = 0;
 	int margin_desired_y = 5;
 	desired_x = (frame_x/2) + margin_desired_x;
@@ -389,6 +389,11 @@ void UpperBodyModule::ballTestParamMsgCallback(const std_msgs::Float64MultiArray
 	x_d_gain = msg->data[2];
 	y_p_gain = msg->data[3];
 	y_d_gain = msg->data[4];
+
+	if(x_p_gain == 0)
+	  command = -1;
+	else
+	  command = 3;
 
 	//printf("sec value ::  %f \n",balance_updating_duration_sec_ );
 	//printf("P value ::  %f \n",y_p_gain );
