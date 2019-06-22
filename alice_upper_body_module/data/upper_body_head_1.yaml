@@ -1,0 +1,17 @@
+link: 
+  [ 
+  head_yaw,   #1
+  head_pitch,   #2
+  ]
+  
+motion: 
+  1: [ 0, 0 ] 
+  2: [ 45, 0 ]
+  3: [ 90, 0 ]
+
+motion_time:
+  [
+  1,   # base 2 motion1
+  2,
+  3
+  ] 

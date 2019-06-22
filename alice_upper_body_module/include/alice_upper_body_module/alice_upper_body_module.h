@@ -149,6 +149,8 @@ private:
 	void finding_motion();
 	void tracking_function();
 	void arm_motion();
+	void head_motion();
+
 	uint8_t command;
 
 	//tracking control function
@@ -182,6 +184,7 @@ private:
 	double current_time_finding;
 	int motion_num_finding;
 	double current_time_arm_motion;
+  double current_time_head_motion;
 	int motion_num_arm_motion;
 
 	//motion
@@ -192,6 +195,8 @@ private:
   heroehs_math::FifthOrderTrajectory *r_shoulder_roll_trj;
   heroehs_math::FifthOrderTrajectory *l_elbow_pitch_trj;
   heroehs_math::FifthOrderTrajectory *r_elbow_pitch_trj;
+  heroehs_math::FifthOrderTrajectory *head_yaw_trj;
+  heroehs_math::FifthOrderTrajectory *head_pitch_trj;
 
   double l_shoulder_pitch_goal;
   double r_shoulder_pitch_goal;
@@ -201,6 +206,9 @@ private:
 
   double l_elbow_pitch_goal;
   double r_elbow_pitch_goal;
+
+  double head_yaw_goal;
+  double head_pitch_goal;
 
 
 
@@ -215,10 +223,14 @@ private:
 	int alice_id_biased_;
 
 
-	void parse_init_pose_data_(const std::string &path);
+	void parse_init_pose_data_(const std::string &type, const std::string &path);
   std::vector<std::string> motion_joint_data_;
   std::map<int, std::vector<double> > motion_numb_to_joint_pose_data_;
   std::vector<double> motion_time_data_;
+
+  std::vector<std::string> head_joint_data_;
+  std::map<int, std::vector<double> > head_numb_to_joint_pose_data_;
+  std::vector<double> head_time_data_;
 };
 
 }

@@ -123,6 +123,8 @@ UpperBodyModule::UpperBodyModule()
 	r_shoulder_roll_trj  = new heroehs_math::FifthOrderTrajectory;
 	l_elbow_pitch_trj    = new heroehs_math::FifthOrderTrajectory;
 	r_elbow_pitch_trj    = new heroehs_math::FifthOrderTrajectory;
+  head_yaw_trj    = new heroehs_math::FifthOrderTrajectory;
+  head_pitch_trj    = new heroehs_math::FifthOrderTrajectory;
 
 	leg_check = 0;
 	ball_detected = 0;

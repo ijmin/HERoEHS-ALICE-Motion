@@ -22,6 +22,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
     joint_name_to_id_[joint_name] = dxl_info->id_;
     joint_id_to_name_[dxl_info->id_] = joint_name;
   }
+
   // waist yaw
   waist_end_point_.resize(6,8);
   waist_end_point_.fill(0);
@@ -48,6 +49,9 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   l_elbow_pitch_goal = 0;
   r_elbow_pitch_goal = 0;
   */
+  head_yaw_goal = 0;
+  head_pitch_goal = 0;
+
   l_shoulder_pitch_trj -> initial_pose = 0;
   r_shoulder_pitch_trj -> initial_pose = 0;
   /*
@@ -64,7 +68,8 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
   r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
   */
-
+  head_yaw_trj -> current_pose = 0;
+  head_pitch_trj -> current_pose = 0;
 
   for(int joint_num_= 3; joint_num_< 6 ; joint_num_ ++)  // waist 3, 5번 // head 345 초기화
   {
@@ -77,7 +82,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
     alice_id_biased_=1;
 
   std::string path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
-  parse_init_pose_data_(path);
+  parse_init_pose_data_("arm",path);
 
   ROS_INFO("< -------  Initialize Module : Upper Body Module  [HEAD  && WAIST] !!  ------->");
 }
@@ -102,6 +107,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     return;
   }
 
+  //head_motion();
   // 18 / 06 / 15
   if(ball_detected == 0)
   {
@@ -144,7 +150,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   {
     if(alice_id_ =="2")
     {
-      //arm_motion();
+      arm_motion();
       result_[joint_id_to_name_[9]] -> goal_position_  = result_rad_waist_ (3,0); // waist yaw
     }
 
@@ -592,8 +598,7 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
 
 }
 
-
-void UpperBodyModule::parse_init_pose_data_(const std::string &path)
+void UpperBodyModule::parse_init_pose_data_(const std::string &type, const std::string &path)
 {
   YAML::Node doc;
   try
@@ -606,16 +611,34 @@ void UpperBodyModule::parse_init_pose_data_(const std::string &path)
     return;
   }
 
-  motion_joint_data_ = doc["link"].as<std::vector<std::string> >();
-  motion_time_data_ = doc["motion_time"].as<std::vector<double> >();
-  YAML::Node motion_pose_node = doc["motion"];
-
-
-  for(YAML::iterator it = motion_pose_node.begin(); it != motion_pose_node.end(); ++it)
+  if(type == "arm")
   {
-    int motion_numb = it->first.as<int>();
+    motion_joint_data_ = doc["link"].as<std::vector<std::string> >();
+    motion_time_data_ = doc["motion_time"].as<std::vector<double> >();
+    YAML::Node motion_pose_node = doc["motion"];
 
-    motion_numb_to_joint_pose_data_[motion_numb]=motion_pose_node[motion_numb].as<std::vector<double> >();
+
+    for(YAML::iterator it = motion_pose_node.begin(); it != motion_pose_node.end(); ++it)
+    {
+      int motion_numb = it->first.as<int>();
+
+      motion_numb_to_joint_pose_data_[motion_numb]=motion_pose_node[motion_numb].as<std::vector<double> >();
+    }
+  }
+
+  else if(type == "head")
+  {
+    head_joint_data_ = doc["link"].as<std::vector<std::string> >();
+    head_time_data_ = doc["motion_time"].as<std::vector<double> >();
+    YAML::Node head_pose_node = doc["motion"];
+
+
+    for(YAML::iterator it = head_pose_node.begin(); it != head_pose_node.end(); ++it)
+    {
+      int head_numb = it->first.as<int>();
+
+      head_numb_to_joint_pose_data_[head_numb]=head_pose_node[head_numb].as<std::vector<double> >();
+    }
   }
 }
 void UpperBodyModule::arm_motion()
@@ -662,6 +685,36 @@ void UpperBodyModule::arm_motion()
   }
   current_time_arm_motion = current_time_arm_motion + 0.008;
 }
+
+void UpperBodyModule::head_motion()
+{
+  Eigen::MatrixXd value;
+  value.resize(1,8);
+  value.fill(0);
+  static int motion_num_ = 1;
+  //ROS_INFO("abbbbbbbbbbbbb%d",head_time_data_[motion_num_-1]);
+  if (current_time_head_motion <= head_time_data_[motion_num_-1] )
+  {
+    ROS_INFO("11111111111111111111");
+    value(0,7) = head_time_data_[motion_num_-1];
+    value(0,1) = head_numb_to_joint_pose_data_[motion_num_][0]*DEGREE2RADIAN;
+    head_yaw_goal = head_yaw_trj -> fifth_order_traj_gen_one_value(value);
+    ROS_INFO("2222222222222222222222");
+    value(0,7) = head_time_data_[motion_num_-1];
+    value(0,1) = head_numb_to_joint_pose_data_[motion_num_][1]*DEGREE2RADIAN;
+    head_pitch_goal = head_pitch_trj -> fifth_order_traj_gen_one_value(value);
+  }
+  else
+  {
+    ROS_INFO("333333333333333333");
+    motion_num_++;
+    if(motion_num_> head_numb_to_joint_pose_data_.size()+1)
+      motion_num_=1;
+    current_time_head_motion=0;
+  }
+  current_time_head_motion = current_time_head_motion + 0.008;
+}
+
 
 
 
