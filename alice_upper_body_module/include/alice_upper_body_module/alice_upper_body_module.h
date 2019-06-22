@@ -212,6 +212,7 @@ private:
 	double current_robot_theta;
 	geometry_msgs::Vector3 robot_state_msg;
 	std::string alice_id_;
+	int alice_id_biased_;
 
 
 	void parse_init_pose_data_(const std::string &path);

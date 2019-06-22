@@ -42,25 +42,28 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   //arm
   l_shoulder_pitch_goal = 0;
   r_shoulder_pitch_goal = 0;
+  /*
   l_shoulder_roll_goal = 0;
   r_shoulder_roll_goal = 0;
   l_elbow_pitch_goal = 0;
   r_elbow_pitch_goal = 0;
-
+  */
   l_shoulder_pitch_trj -> initial_pose = 0;
   r_shoulder_pitch_trj -> initial_pose = 0;
+  /*
   l_shoulder_roll_trj -> initial_pose = 0;
   r_shoulder_roll_trj -> initial_pose = 0;
   l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
   r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
-
+  */
   l_shoulder_pitch_trj -> current_pose = 0;
   r_shoulder_pitch_trj -> current_pose = 0;
+  /*
   l_shoulder_roll_trj -> current_pose = 0;
   r_shoulder_roll_trj -> current_pose = 0;
   l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
   r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
-
+  */
 
 
   for(int joint_num_= 3; joint_num_< 6 ; joint_num_ ++)  // waist 3, 5번 // head 345 초기화
@@ -68,9 +71,14 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
     waist_end_point_(joint_num_, 7) = 3.0;
     head_end_point_ (joint_num_, 7) = 3.0;
   }
+  if(alice_id_=="1")
+    alice_id_biased_=-1;
+  else
+    alice_id_biased_=1;
 
   std::string path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
   parse_init_pose_data_(path);
+
   ROS_INFO("< -------  Initialize Module : Upper Body Module  [HEAD  && WAIST] !!  ------->");
 }
 double UpperBodyModule::limitCheck(double calculated_value, double max, double min)
@@ -148,7 +156,8 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //result_[joint_id_to_name_[5]]-> goal_position_  =  l_elbow_pitch_goal; // l_elbow_pitch
     //result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
 
-    result_[joint_id_to_name_[7]]-> goal_position_  =  -result_rad_head_(4,0);
+    //ROS_INFO("HEAD PITCH :%f   | %d",alice_id_biased_*result_rad_head_(4,0),alice_id_biased_);
+    result_[joint_id_to_name_[7]]-> goal_position_  =  alice_id_biased_*result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
   }
 

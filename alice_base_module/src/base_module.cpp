@@ -80,12 +80,12 @@ BaseModule::BaseModule()
 	result_["head_yaw"]         = new robotis_framework::DynamixelState();  // joint 7
 	result_["head_pitch"]       = new robotis_framework::DynamixelState();  // joint 8
 
-	result_["l_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 1
+  result_["l_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 1
 	result_["r_shoulder_pitch"] = new robotis_framework::DynamixelState();  // joint 2
-  result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
-  result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
-  result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
-  result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
+////  result_["l_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 3
+////  result_["r_shoulder_roll"]  = new robotis_framework::DynamixelState();  // joint 4
+////  result_["l_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 5
+////  result_["r_elbow_pitch"]    = new robotis_framework::DynamixelState();  // joint 6
 
 
 	//init
