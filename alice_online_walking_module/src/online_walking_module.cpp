@@ -7,6 +7,7 @@
 
 #include "alice_online_walking_module/online_walking_module.h"
 
+
 using namespace alice;
 
 class WalkingStatusMSG
@@ -1173,14 +1174,31 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
 
   reference_body_msg_.x = online_walking->reference_body_x_;
   reference_body_msg_.y = online_walking->reference_body_y_;
+  double tan2 = 0;
+  if (online_walking->mat_g_to_pelvis_(0,0) == 0 || online_walking->mat_g_to_pelvis_(1,0) == 0)
+    tan2 = 0;
+  else
+    tan2 = atan2(online_walking->mat_g_to_pelvis_(1,0),online_walking->mat_g_to_pelvis_(0,0));
+
+  if(tan2<0)
+    tan2 += 2*M_PI;
+
+
+  reference_body_msg_.z = tan2;
 
   reference_zmp_pub_.publish(reference_zmp_msg_);
   reference_body_pub_.publish(reference_body_msg_);
 
+  //std::cout << online_walking->mat_g_to_pelvis_<< std::endl;
+  //std::cout << tan2 << std::endl;
+  //std::cout << "===================" << std::endl;
+
   desired_matrix_g_to_pelvis_ = online_walking->mat_g_to_pelvis_;
   desired_matrix_g_to_rfoot_  = online_walking->mat_g_to_rfoot_;
   desired_matrix_g_to_lfoot_  = online_walking->mat_g_to_lfoot_;
+
   process_mutex_.unlock();
+
 
   //publishRobotPose();
   result_["r_hip_pitch"  ]->goal_position_ = online_walking->out_angle_rad_[0];
