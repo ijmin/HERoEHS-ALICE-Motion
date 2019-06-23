@@ -48,7 +48,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   r_shoulder_roll_goal = 0;
   l_elbow_pitch_goal = 0;
   r_elbow_pitch_goal = 0;
-  */
+   */
   head_yaw_goal = 0;
   head_pitch_goal = 0;
 
@@ -59,7 +59,12 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   r_shoulder_roll_trj -> initial_pose = 0;
   l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
   r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
-  */
+   */
+
+  head_yaw_trj -> initial_pose = 0;
+  head_pitch_trj -> initial_pose = 20*DEGREE2RADIAN;
+
+
   l_shoulder_pitch_trj -> current_pose = 0;
   r_shoulder_pitch_trj -> current_pose = 0;
   /*
@@ -67,7 +72,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   r_shoulder_roll_trj -> current_pose = 0;
   l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
   r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
-  */
+   */
   head_yaw_trj -> current_pose = 0;
   head_pitch_trj -> current_pose = 0;
 
@@ -76,13 +81,12 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
     waist_end_point_(joint_num_, 7) = 3.0;
     head_end_point_ (joint_num_, 7) = 3.0;
   }
-  if(alice_id_=="1")
-    alice_id_biased_=-1;
-  else
-    alice_id_biased_=1;
 
-  std::string path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
-  parse_init_pose_data_("arm",path);
+
+  std::string arm_path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_arm_"+alice_id_+".yaml";
+  parse_motion_data("arm",arm_path);
+  std::string head_path = ros::package::getPath("alice_upper_body_module") + "/data/upper_body_head_"+alice_id_+".yaml";
+  parse_motion_data("head",head_path);
 
   ROS_INFO("< -------  Initialize Module : Upper Body Module  [HEAD  && WAIST] !!  ------->");
 }
@@ -118,12 +122,13 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   algorithm_process(command);
 
-//  printf("-------------------\n\n");
-//  printf("RESULT YAW   ::  %f \n\n",result_rad_head_(3,0)*RADIAN2DEGREE);
-//  printf("RESULT PITCH ::  %f \n\n",result_rad_head_(4,0)*RADIAN2DEGREE);
-//  printf("-------------------\n\n");
+  //  printf("-------------------\n\n");
+  //  printf("RESULT YAW   ::  %f \n\n",result_rad_head_(3,0)*RADIAN2DEGREE);
+  //  printf("RESULT PITCH ::  %f \n\n",result_rad_head_(4,0)*RADIAN2DEGREE);
+  //  printf("-------------------\n\n");
 
-
+  //std::cout << "---------------" << std::endl;
+  //std::cout << result_rad_head_ << std::endl;
   head_end_point_(3,1) = limitCheck(head_end_point_(3,1),60,-60);
   head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
 
@@ -137,8 +142,8 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   //result_[joint_id_to_name_[7]]-> goal_position_  =  filter_head->lowPassFilter(temp_head_pitch, temp_pre_pitch, 0.01, 0.008);
   //result_[joint_id_to_name_[8]]-> goal_position_  =  filter_head->lowPassFilter(temp_head_yaw, temp_pre_yaw, 0.01, 0.008);
 
-  result_rad_head_(3,0) =  limitCheck(result_rad_head_(3,0),60,-60);
-  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),75,0);
+  result_rad_head_(3,0) =  limitCheck(result_rad_head_(3,0),60,-60);  //yaw
+  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),75,0);    //pitch
 
 
   if (isnan(result_rad_head_(4,0)) || isnan(result_rad_head_(3,0)))
@@ -163,7 +168,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //result_[joint_id_to_name_[6]]-> goal_position_  =  r_elbow_pitch_goal; // r_elbow_pitch
 
     //ROS_INFO("HEAD PITCH :%f   | %d",alice_id_biased_*result_rad_head_(4,0),alice_id_biased_);
-    result_[joint_id_to_name_[7]]-> goal_position_  =  alice_id_biased_*result_rad_head_(4,0);
+    result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
   }
 
@@ -180,259 +185,6 @@ void UpperBodyModule::stop()
 }
 
 // algorithm
-void UpperBodyModule::scanning_motion()
-{
-  static double motion_time_ = 2.0;
-
-  if(current_time_scanning >= 0 && current_time_scanning < motion_time_&& motion_num_scanning == 1)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = -55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= motion_time_ && current_time_scanning < 3.0 && motion_num_scanning == 2)
-  {
-    waist_end_point_(3,7) = 1.0;
-    head_end_point_(3,7)  = 1.0;
-    head_end_point_(4,7)  = 1.0;
-    //waist_end_point_(3, 1) = -55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    //head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    //head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 3.0 && current_time_scanning < 5.0 && motion_num_scanning == 3)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = -55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 80*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 0*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 5.0 && current_time_scanning < 6.0 && motion_num_scanning == 4)
-  {
-    waist_end_point_(3,7) = 1.0;
-    head_end_point_(3,7)  = 1.0;
-    head_end_point_(4,7)  = 1.0;
-    //waist_end_point_(3, 1) = -55*DEGREE2RADIAN;
-    //waist_end_point_(3, 7)  = 6;
-    //waist_end_point_(4, 1) = 0;
-    //head_end_point_(3, 1)  = 80*DEGREE2RADIAN;
-    //head_end_point_(3, 7)  = 6;
-    //head_end_point_(4, 1)  = 0*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 6.0 && current_time_scanning < 8.0 && motion_num_scanning == 5)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 0*DEGREE2RADIAN;
-    //waist_end_point_(3, 7)  = 6;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    //head_end_point_(3, 7)  = 6;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 8.0 && current_time_scanning < 10.0 && motion_num_scanning == 6)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 10.0 && current_time_scanning < 11.0 && motion_num_scanning == 7)
-  {
-    waist_end_point_(3,7) = 1.0;
-    head_end_point_(3,7)  = 1.0;
-    head_end_point_(4,7)  = 1.0;
-    //waist_end_point_(3, 1) = 55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    //head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    //head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 11.0 && current_time_scanning < 13.0 && motion_num_scanning == 8)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = -80*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 0*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 13.0 && current_time_scanning < 14.0 && motion_num_scanning == 9)
-  {
-    waist_end_point_(3,7) = 1.0;
-    head_end_point_(3,7)  = 1.0;
-    head_end_point_(4,7)  = 1.0;
-    //waist_end_point_(3, 1) = 55*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    //head_end_point_(3, 1)  = -80*DEGREE2RADIAN;
-    //head_end_point_(4, 1)  = 0*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 14.0 && current_time_scanning < 16.0 && motion_num_scanning == 10)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 0*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 16.0 && current_time_scanning < 18.0 && motion_num_scanning == 11)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 0*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 50*DEGREE2RADIAN;
-  }
-  else if(current_time_scanning >= 18.0 && current_time_scanning < 19.0 && motion_num_scanning == 12)
-  {
-    waist_end_point_(3,7) = 1.0;
-    head_end_point_(3,7)  = 1.0;
-    head_end_point_(4,7)  = 1.0;
-  }
-  else if(current_time_scanning >= 19.0 && current_time_scanning < 21.0 && motion_num_scanning == 13)
-  {
-    waist_end_point_(3,7) = 2.0;
-    head_end_point_(3,7)  = 2.0;
-    head_end_point_(4,7)  = 2.0;
-    waist_end_point_(3, 1) = 0*DEGREE2RADIAN;
-    //waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  /*
-		else if(current_time_ >= motion_time_*5 && current_time_ < motion_time_*6 && motion_num_ == 6)
-		{
-			waist_end_point_(3, 1) = 0;
-			waist_end_point_(4, 1) = 0;
-			head_end_point_(3, 1)  = 0;
-			head_end_point_(4, 1)  = 20*DEGREE2RADIAN;
-		}*/
-  /*
-		else if(current_time_ >= motion_time_*5 && current_time_ < motion_time_*6 && motion_num_ == 6)
-		{
-			waist_end_point_(3, 1) = 0;
-			waist_end_point_(4, 1) = 0;
-			head_end_point_(3, 1)  = 0;
-			head_end_point_(4, 1)  = 20*DEGREE2RADIAN;
-		}*/
-  else
-  {
-    if(motion_num_scanning == 14)
-    {
-      scan_done_msg.data = true;
-      scan_done_pub.publish(scan_done_msg);
-      motion_num_scanning ++;
-    }
-    else if (motion_num_scanning > 14)
-      return;
-    else
-    {
-      motion_num_scanning ++;
-    }
-  }
-
-  /*	if(leg_check == 1)
-		waist_end_point_(3, 1) = 0;*/
-
-  current_time_scanning = current_time_scanning + 0.008;
-}
-void UpperBodyModule::finding_motion()
-{
-  static double motion_time_ = 3.0;
-
-  if(current_time_finding >= 0 && current_time_finding < motion_time_&& motion_num_finding== 1)
-  {
-    waist_end_point_(3,7) = 3.0;
-    head_end_point_(3,7)  = 3.0;
-    head_end_point_(4,7)  = 3.0;
-    waist_end_point_(3, 1) = 0;
-    head_end_point_(3, 1)  = 0;
-    head_end_point_(4, 1)  = 70*DEGREE2RADIAN;
-  }
-  else if(current_time_finding >= motion_time_ && current_time_finding < motion_time_*2 && motion_num_finding == 2)
-  {
-    waist_end_point_(3,7) = 3.0;
-    head_end_point_(3,7)  = 3.0;
-    head_end_point_(4,7)  = 3.0;
-    waist_end_point_(3, 1) = 0;
-
-    head_end_point_(3, 1)  = 55*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 30*DEGREE2RADIAN;
-  }
-  else if(current_time_finding >= motion_time_*2 && current_time_finding < motion_time_*3 && motion_num_finding == 3)
-  {
-    waist_end_point_(3,7) = 3.0;
-    head_end_point_(3,7)  = 3.0;
-    head_end_point_(4,7)  = 3.0;
-    waist_end_point_(3, 1) = 0;
-
-    head_end_point_(3, 1)  = 0;
-    head_end_point_(4, 1)  = 30*DEGREE2RADIAN;
-  }
-  else if(current_time_finding >= motion_time_*3 && current_time_finding < motion_time_*4 && motion_num_finding == 4)
-  {
-    waist_end_point_(3,7) = 3.0;
-    head_end_point_(3,7)  = 3.0;
-    head_end_point_(4,7)  = 3.0;
-    waist_end_point_(3, 1) = 0;
-
-    head_end_point_(3, 1)  = -55*DEGREE2RADIAN;
-    head_end_point_(4, 1)  = 30*DEGREE2RADIAN;
-  }
-  else if(current_time_finding >= motion_time_*4 && current_time_finding < motion_time_*5 && motion_num_finding == 5)
-  {
-    waist_end_point_(3,7) = 3.0;
-    head_end_point_(3,7)  = 3.0;
-    head_end_point_(4,7)  = 3.0;
-    waist_end_point_(3, 1) = 0;
-    waist_end_point_(4, 1) = 0;
-    head_end_point_(3, 1)  = 0;
-    head_end_point_(4, 1)  = 10*DEGREE2RADIAN;
-  }
-  /*	else if(current_time_ >= motion_time_*4 && current_time_ < motion_time_*5 && motion_num_ == 5)
-	{
-		waist_end_point_(3, 1) = 55*DEGREE2RADIAN;
-		waist_end_point_(4, 1) = 0;
-	    head_end_point_(3, 1)  = 0;
-		head_end_point_(4, 1)  = 0;
-	}
-	else if(current_time_ >= motion_time_*5 && current_time_ < motion_time_*6 && motion_num_ == 6)
-	{
-		waist_end_point_(3, 1) = 0;
-		waist_end_point_(4, 1) = 0;
-		head_end_point_(3, 1)  = 0;
-		head_end_point_(4, 1)  = 20*DEGREE2RADIAN;
-	}*/
-  else
-  {
-    motion_num_finding++;
-    if(motion_num_finding == 6)
-    {
-      motion_num_finding = 0;
-      current_time_finding = 0;
-    }
-  }
-
-  if(leg_check == 1)
-    waist_end_point_(3, 1) = 0;
-
-  current_time_finding = current_time_finding + 0.008;
-}
 void UpperBodyModule::updateBalanceParameter()
 {
   if(balance_update_ == false)
@@ -461,12 +213,82 @@ void UpperBodyModule::updateBalanceParameter()
 
   }
 }
+
+void UpperBodyModule::scanning_motion()
+{
+  ROS_INFO("SCAN MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
+
+  if(motion_num_scanning > head_scan_motion_data_.size()+1)
+    return;
+  if (current_time_scanning <= head_scan_time_data_[motion_num_scanning-1] )
+  {
+    waist_end_point_(3,7) = head_scan_time_data_[motion_num_scanning-1];
+    head_end_point_(3,7)  = head_scan_time_data_[motion_num_scanning-1];
+    head_end_point_(4,7)  = head_scan_time_data_[motion_num_scanning-1];
+
+    waist_end_point_(3, 1) = head_scan_motion_data_[motion_num_scanning][2]*DEGREE2RADIAN;
+    head_end_point_(3, 1)  = head_scan_motion_data_[motion_num_scanning][0]*DEGREE2RADIAN;
+    head_end_point_(4, 1)  = head_scan_motion_data_[motion_num_scanning][1]*DEGREE2RADIAN;
+  }
+  else
+  {
+    motion_num_scanning++;
+
+    if(motion_num_scanning > head_scan_motion_data_.size()+1)
+    {
+      scan_done_msg.data = true;
+      scan_done_pub.publish(scan_done_msg);
+      //motion_num_scanning=1;
+      // current_time_scanning=0;
+    }
+    current_time_scanning=0;
+  }
+  /*	if(leg_check == 1)
+		waist_end_point_(3, 1) = 0;*/
+
+  current_time_scanning = current_time_scanning + 0.008;
+}
+void UpperBodyModule::finding_motion()
+{
+  ROS_INFO("FIND MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
+
+ if(motion_num_finding > head_find_motion_data_.size())
+  {
+    motion_num_finding=1;
+    current_time_finding=0;
+  }
+  if (current_time_finding <= head_find_time_data_[motion_num_finding-1] )
+  {
+    waist_end_point_(3,7) = head_find_time_data_[motion_num_finding-1];
+    head_end_point_(3,7)  = head_find_time_data_[motion_num_finding-1];
+    head_end_point_(4,7)  = head_find_time_data_[motion_num_finding-1];
+
+    waist_end_point_(3, 1) = head_find_motion_data_[motion_num_finding][2]*DEGREE2RADIAN;
+    head_end_point_(3, 1)  = head_find_motion_data_[motion_num_finding][0]*DEGREE2RADIAN;
+    head_end_point_(4, 1)  = head_find_motion_data_[motion_num_finding][1]*DEGREE2RADIAN;
+  }
+  else
+  {
+    motion_num_finding++;
+    if(motion_num_finding > head_find_motion_data_.size())
+    {
+      motion_num_finding=1;
+    }
+    current_time_finding=0;
+  }
+
+  if(leg_check == 1)
+    waist_end_point_(3, 1) = 0;
+
+  current_time_finding = current_time_finding + 0.008;
+}
+
 void UpperBodyModule::tracking_function()
 {
   //current_x = filter_head->lowPassFilter(current_x, pre_current_x, 0, 0.008);
   //current_y = filter_head->lowPassFilter(current_y, pre_current_y, 0, 0.008);
-  //printf("X   control value ::  %f \n",current_x);
-  //printf("Y   control value ::  %f \n",current_y);
+  //printf("X   current ::  %f  desired :: %f \n",current_x,desired_x);
+  //printf("Y   current ::  %f  desired :: %f\n",current_y,desired_y);
 
   updateBalanceParameter();
 
@@ -482,9 +304,8 @@ void UpperBodyModule::tracking_function()
     control_angle_pitch_temp = 0;
   }
 
-
-  //	printf("X   control value ::  %f \n", control_angle_yaw_temp);
-  //	printf("Y   control value ::  %f \n", control_angle_pitch_temp);
+  //printf("X   control value ::  %f \n", control_angle_yaw_temp);
+  //printf("Y   control value ::  %f \n", control_angle_pitch_temp);
 
   control_angle_yaw   = control_angle_yaw + control_angle_yaw_temp;
   control_angle_pitch = control_angle_pitch - control_angle_pitch_temp;
@@ -506,8 +327,10 @@ void UpperBodyModule::tracking_function()
   //pre_current_y = current_y;
 
 }
+
 void UpperBodyModule::algorithm_process(uint8_t command_)
 {
+
   if(command_ == 0)
   {
     waist_end_point_(3,7)  = 3.0;
@@ -553,7 +376,6 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
     current_time_scanning = 0.0;
     motion_num_scanning = 1;
 
-
     control_angle_yaw  = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
     control_angle_pitch = end_to_rad_head_  ->cal_end_point_tra_betta->current_pose;
     ////
@@ -598,7 +420,7 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
 
 }
 
-void UpperBodyModule::parse_init_pose_data_(const std::string &type, const std::string &path)
+void UpperBodyModule::parse_motion_data(const std::string &type, const std::string &path)
 {
   YAML::Node doc;
   try
@@ -628,16 +450,26 @@ void UpperBodyModule::parse_init_pose_data_(const std::string &type, const std::
 
   else if(type == "head")
   {
+    YAML::Node head_motion_node;
+    YAML::Node head_motion_joint_node;
     head_joint_data_ = doc["link"].as<std::vector<std::string> >();
-    head_time_data_ = doc["motion_time"].as<std::vector<double> >();
-    YAML::Node head_pose_node = doc["motion"];
 
-
-    for(YAML::iterator it = head_pose_node.begin(); it != head_pose_node.end(); ++it)
+    head_motion_node = doc["find"];
+    head_find_time_data_ = head_motion_node["motion_time"].as<std::vector<double> >();
+    head_motion_joint_node = head_motion_node["motion"];
+    for(YAML::iterator it = head_motion_joint_node.begin(); it != head_motion_joint_node.end(); ++it)
     {
       int head_numb = it->first.as<int>();
+      head_find_motion_data_[head_numb]=head_motion_joint_node[head_numb].as<std::vector<double> >();
+    }
 
-      head_numb_to_joint_pose_data_[head_numb]=head_pose_node[head_numb].as<std::vector<double> >();
+    head_motion_node = doc["scan"];
+    head_scan_time_data_ = head_motion_node["motion_time"].as<std::vector<double> >();
+    head_motion_joint_node = head_motion_node["motion"];
+    for(YAML::iterator it = head_motion_joint_node.begin(); it != head_motion_joint_node.end(); ++it)
+    {
+      int head_numb = it->first.as<int>();
+      head_scan_motion_data_[head_numb]=head_motion_joint_node[head_numb].as<std::vector<double> >();
     }
   }
 }
@@ -646,73 +478,44 @@ void UpperBodyModule::arm_motion()
   Eigen::MatrixXd value;
   value.resize(1,8);
   value.fill(0);
-  static int motion_num_ = 1;
 
-
-  if (current_time_arm_motion <= motion_time_data_[motion_num_-1] )
+  if (current_time_arm_motion <= motion_time_data_[motion_num_arm-1] )
   {
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][0]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][0]*DEGREE2RADIAN;
     l_shoulder_pitch_goal = l_shoulder_pitch_trj -> fifth_order_traj_gen_one_value(value);
 
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][1]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][1]*DEGREE2RADIAN;
     r_shoulder_pitch_goal = r_shoulder_pitch_trj -> fifth_order_traj_gen_one_value(value);
 
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][2]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][2]*DEGREE2RADIAN;
     l_shoulder_roll_goal = l_shoulder_roll_trj -> fifth_order_traj_gen_one_value(value);
 
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][3]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][3]*DEGREE2RADIAN;
     r_shoulder_roll_goal = r_shoulder_roll_trj -> fifth_order_traj_gen_one_value(value);
 
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][4]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][4]*DEGREE2RADIAN;
     l_elbow_pitch_goal = l_elbow_pitch_trj -> fifth_order_traj_gen_one_value(value);
 
-    value(0,7) = motion_time_data_[motion_num_-1];
-    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_][5]*DEGREE2RADIAN;
+    value(0,7) = motion_time_data_[motion_num_arm-1];
+    value(0,1) = motion_numb_to_joint_pose_data_[motion_num_arm][5]*DEGREE2RADIAN;
     r_elbow_pitch_goal = r_elbow_pitch_trj -> fifth_order_traj_gen_one_value(value);
 
   }
   else
   {
-    motion_num_++;
-    if(motion_num_> motion_numb_to_joint_pose_data_.size()+1)
-      motion_num_=1;
+    motion_num_arm++;
+    if(motion_num_arm> motion_numb_to_joint_pose_data_.size()+1)
+    {
+      motion_num_arm=1;
+    }
     current_time_arm_motion=0;
   }
   current_time_arm_motion = current_time_arm_motion + 0.008;
-}
-
-void UpperBodyModule::head_motion()
-{
-  Eigen::MatrixXd value;
-  value.resize(1,8);
-  value.fill(0);
-  static int motion_num_ = 1;
-  //ROS_INFO("abbbbbbbbbbbbb%d",head_time_data_[motion_num_-1]);
-  if (current_time_head_motion <= head_time_data_[motion_num_-1] )
-  {
-    ROS_INFO("11111111111111111111");
-    value(0,7) = head_time_data_[motion_num_-1];
-    value(0,1) = head_numb_to_joint_pose_data_[motion_num_][0]*DEGREE2RADIAN;
-    head_yaw_goal = head_yaw_trj -> fifth_order_traj_gen_one_value(value);
-    ROS_INFO("2222222222222222222222");
-    value(0,7) = head_time_data_[motion_num_-1];
-    value(0,1) = head_numb_to_joint_pose_data_[motion_num_][1]*DEGREE2RADIAN;
-    head_pitch_goal = head_pitch_trj -> fifth_order_traj_gen_one_value(value);
-  }
-  else
-  {
-    ROS_INFO("333333333333333333");
-    motion_num_++;
-    if(motion_num_> head_numb_to_joint_pose_data_.size()+1)
-      motion_num_=1;
-    current_time_head_motion=0;
-  }
-  current_time_head_motion = current_time_head_motion + 0.008;
 }
 
 

@@ -110,12 +110,16 @@ UpperBodyModule::UpperBodyModule()
 
 	//motion
 	current_time_scanning = 0;
-	motion_num_scanning = 0;
+	motion_num_scanning = 1;
+  motion_scan_status=2.0;
+
 	current_time_finding = 0;
-	motion_num_finding = 0;
+	motion_num_finding = 1;
+  motion_find_status=3.0;
 
 	current_time_arm_motion = 0;
-	motion_num_arm_motion = 1;
+	motion_num_arm=1;
+
 
 	l_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
 	r_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
@@ -151,12 +155,12 @@ void UpperBodyModule::queueThread()
 
 	// publish topics
 	scan_done_pub = ros_node.advertise<std_msgs::Bool>("/heroehs/alice/scan_done", 1);
-	robot_state_pub = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice/robot_state", 1);
+	//robot_state_pub = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice/robot_state", 1);
 
 
 	// subscribe topics
 	environment_detector_sub = ros_node.subscribe("/heroehs/environment_detector", 5, &UpperBodyModule::environmentDetectorMsgCallback, this);
-	detected_objects_sub = ros_node.subscribe("/heroehs/detected_objects", 5, &UpperBodyModule::detectedObjectsMsgCallback, this);
+	//detected_objects_sub = ros_node.subscribe("/heroehs/detected_objects", 5, &UpperBodyModule::detectedObjectsMsgCallback, this);
 
 	head_moving_sub = ros_node.subscribe("/heroehs/alice/head_command", 5, &UpperBodyModule::headMovingMsgCallback, this);
 
@@ -379,8 +383,8 @@ void UpperBodyModule::headMovingMsgCallback(const std_msgs::UInt8::ConstPtr& msg
 //test
 void UpperBodyModule::ballTestMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg)
 {
-	/*	current_x = msg->data[0];
-	current_y = msg->data[1];*/
+	current_x = msg->data[0];
+	current_y = msg->data[1];
 
 }
 void UpperBodyModule::ballTestParamMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg)

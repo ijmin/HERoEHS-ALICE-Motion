@@ -127,7 +127,7 @@ head_p: #7
   child: 27
   mass: 0.724
   relative_position: [0.0, 0.0, 0.0]
-  joint_axis: [0.0, -1.0, 0.0]
+  joint_axis: [0.0, 1.0, 0.0]
   center_of_mass: [0.0, 0.0, 0.0]
   joint_limit_max: 0.5
   joint_limit_min: -0.5

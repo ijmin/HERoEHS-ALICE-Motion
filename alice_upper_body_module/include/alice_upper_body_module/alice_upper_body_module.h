@@ -149,7 +149,6 @@ private:
 	void finding_motion();
 	void tracking_function();
 	void arm_motion();
-	void head_motion();
 
 	uint8_t command;
 
@@ -181,12 +180,14 @@ private:
 	//motion
 	double current_time_scanning;
 	int motion_num_scanning;
+	double motion_scan_status;
+
 	double current_time_finding;
 	int motion_num_finding;
-	double current_time_arm_motion;
-  double current_time_head_motion;
-	int motion_num_arm_motion;
+	double motion_find_status;
 
+	double current_time_arm_motion;
+	int motion_num_arm;
 	//motion
 
   heroehs_math::FifthOrderTrajectory *l_shoulder_pitch_trj;
@@ -211,8 +212,6 @@ private:
   double head_pitch_goal;
 
 
-
-
 	// detected objects and absolute
 	double current_goal_x,current_goal_y;
 	double current_center_x,current_center_y;
@@ -220,17 +219,21 @@ private:
 	double current_robot_theta;
 	geometry_msgs::Vector3 robot_state_msg;
 	std::string alice_id_;
-	int alice_id_biased_;
 
-
-	void parse_init_pose_data_(const std::string &type, const std::string &path);
+	void parse_motion_data(const std::string &type, const std::string &path);
   std::vector<std::string> motion_joint_data_;
   std::map<int, std::vector<double> > motion_numb_to_joint_pose_data_;
   std::vector<double> motion_time_data_;
 
+
   std::vector<std::string> head_joint_data_;
-  std::map<int, std::vector<double> > head_numb_to_joint_pose_data_;
-  std::vector<double> head_time_data_;
+  std::map<int, std::vector<double> > head_find_motion_data_;
+  std::map<int, std::vector<double> > head_scan_motion_data_;
+  std::vector<double> head_find_time_data_;
+  std::vector<double> head_scan_time_data_;
+
+
+
 };
 
 }
