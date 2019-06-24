@@ -111,11 +111,9 @@ UpperBodyModule::UpperBodyModule()
 	//motion
 	current_time_scanning = 0;
 	motion_num_scanning = 1;
-  motion_scan_status=2.0;
 
 	current_time_finding = 0;
 	motion_num_finding = 1;
-  motion_find_status=3.0;
 
 	current_time_arm_motion = 0;
 	motion_num_arm=1;

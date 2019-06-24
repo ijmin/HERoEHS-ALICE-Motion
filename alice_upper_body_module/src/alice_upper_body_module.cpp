@@ -37,8 +37,13 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
 
   head_end_point_(4,0) = 20*DEGREE2RADIAN; // pitch 초기값
   head_end_point_(4,1) = 20*DEGREE2RADIAN; //
+
   end_to_rad_head_->cal_end_point_tra_betta->current_pose = 20*DEGREE2RADIAN;
   end_to_rad_head_->current_pose_change(4,0) = 20*DEGREE2RADIAN;
+
+  //tracking initial value
+  control_angle_yaw  = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
+  control_angle_pitch = end_to_rad_head_ ->cal_end_point_tra_betta->current_pose;
 
   //arm
   l_shoulder_pitch_goal = 0;
