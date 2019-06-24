@@ -96,6 +96,13 @@ OnlineWalkingModule::OnlineWalkingModule()
   temp_right_zmp_y = 0;
   temp_left_zmp_x  = 0;
   temp_left_zmp_y  = 0;
+
+  reference_body_sum_msg_.x=0;
+  reference_body_sum_msg_.y=0;
+  reference_body_sum_msg_.z=0;
+  reference_body_priv_msg_.x=0;
+  reference_body_priv_msg_.y=0;
+  reference_body_priv_msg_.z=0;
   readKinematicsYamlData();
 }
 
@@ -204,6 +211,7 @@ void OnlineWalkingModule::queueThread()
   //yitaek
   reference_zmp_pub_ = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice_reference_zmp", 1);
   reference_body_pub_ = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice_reference_body", 1);
+  reference_body_sum_pub_= ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice_reference_body_sum", 1);
 
   real_zmp_pub_ = ros_node.advertise<geometry_msgs::Vector3>("/heroehs/alice_real_zmp", 1);
 
@@ -1174,6 +1182,8 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
 
   reference_body_msg_.x = online_walking->reference_body_x_;
   reference_body_msg_.y = online_walking->reference_body_y_;
+
+
   double tan2 = 0;
   if (online_walking->mat_g_to_pelvis_(0,0) == 0 || online_walking->mat_g_to_pelvis_(1,0) == 0)
     tan2 = 0;
@@ -1182,12 +1192,33 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
 
   if(tan2<0)
     tan2 += 2*M_PI;
-
-
   reference_body_msg_.z = tan2;
+
+  if(isRunning())
+  {
+    reference_body_sum_msg_.x += reference_body_msg_.x-reference_body_priv_msg_.x;
+    reference_body_sum_msg_.y += reference_body_msg_.y-reference_body_priv_msg_.y;
+    reference_body_sum_msg_.z += reference_body_msg_.z-reference_body_priv_msg_.z;
+  }
+  else
+  {
+    reference_body_sum_msg_.x += reference_body_msg_.x;
+    reference_body_sum_msg_.y += reference_body_msg_.y;
+    reference_body_sum_msg_.z += reference_body_msg_.z;
+  }
+  if(reference_body_sum_msg_.z>2*M_PI)
+  {
+    reference_body_sum_msg_.z -= 2*M_PI;
+  }
+
+  reference_body_priv_msg_.x = reference_body_msg_.x;
+  reference_body_priv_msg_.y = reference_body_msg_.y;
+  reference_body_priv_msg_.z = reference_body_msg_.z;
+
 
   reference_zmp_pub_.publish(reference_zmp_msg_);
   reference_body_pub_.publish(reference_body_msg_);
+  reference_body_sum_pub_.publish(reference_body_sum_msg_);
 
   //std::cout << online_walking->mat_g_to_pelvis_<< std::endl;
   //std::cout << tan2 << std::endl;

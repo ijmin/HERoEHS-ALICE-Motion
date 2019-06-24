@@ -151,6 +151,7 @@ private:
   //yitaek test
   ros::Publisher reference_zmp_pub_;
   ros::Publisher reference_body_pub_;
+  ros::Publisher reference_body_sum_pub_;
   ros::Publisher foot_right_pub_;
   ros::Publisher foot_left_pub_;
 
@@ -173,6 +174,8 @@ private:
 
   geometry_msgs::Vector3 reference_zmp_msg_;
   geometry_msgs::Vector3 reference_body_msg_;
+  geometry_msgs::Vector3 reference_body_sum_msg_;
+  geometry_msgs::Vector3 reference_body_priv_msg_;
 
   geometry_msgs::Vector3 foot_right_msg_;
   geometry_msgs::Vector3 foot_left_msg_;
