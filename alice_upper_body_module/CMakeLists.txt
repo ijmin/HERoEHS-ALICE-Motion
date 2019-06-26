@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   heroehs_math
   alice_balance_control
   alice_msgs
+  diagnostic_msgs
 )
 
 find_package(Eigen REQUIRED)
@@ -40,7 +41,7 @@ pkg_check_modules(yaml_cpp yaml-cpp REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES alice_upper_body_module
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs diagnostic_msgs
 )
 
 ################################################################################

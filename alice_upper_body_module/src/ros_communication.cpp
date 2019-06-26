@@ -76,7 +76,7 @@ UpperBodyModule::UpperBodyModule()
 	temp_pre_yaw = 0;
 
 	// tracking
-	command = -1;
+	command = 255;
 	pidController_x = new control_function::PID_function(0.008,60*DEGREE2RADIAN,-60*DEGREE2RADIAN,0,0,0);
 	pidController_y = new control_function::PID_function(0.008,75*DEGREE2RADIAN,0*DEGREE2RADIAN,0,0,0);
 
@@ -118,6 +118,7 @@ UpperBodyModule::UpperBodyModule()
 	current_time_arm_motion = 0;
 	motion_num_arm=1;
 
+	arm_motion_run =false;
 
 	l_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
 	r_shoulder_pitch_trj = new heroehs_math::FifthOrderTrajectory;
@@ -369,14 +370,36 @@ void UpperBodyModule::detectedObjectsMsgCallback(const alice_msgs::FoundObjectAr
 
 }
 
-void UpperBodyModule::headMovingMsgCallback(const std_msgs::UInt8::ConstPtr& msg)
+void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg)
 {
-	command = msg -> data;
+
+  if(msg->key == "head_tracking") //head tracking
+  {
+    command = 3;
+  }
+  else if(msg->key == "head_searching") //head search
+  {
+    command = 2;
+  }
+  else if(msg->key == "arm_motion") //arm
+  {
+    if(msg->value == "1") //on
+    {
+      arm_motion_run = true;
+    }
+    else if(msg->value == "0") //off
+    {
+      arm_motion_run = false;
+    }
+  }
+
+
+  /*command = msg -> data;
 	if(command == 1)
 	{
 		current_time_scanning = 0;
 		motion_num_scanning = 1;
-	}
+	}*/
 }
 //test
 void UpperBodyModule::ballTestMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg)
@@ -395,7 +418,7 @@ void UpperBodyModule::ballTestParamMsgCallback(const std_msgs::Float64MultiArray
 	y_d_gain = msg->data[4];
 
 	if(x_p_gain == 0)
-	  command = -1;
+	  command = 255;
 	else
 	  command = 3;
 

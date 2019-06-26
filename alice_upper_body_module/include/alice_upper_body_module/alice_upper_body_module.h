@@ -44,8 +44,9 @@
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/PointStamped.h>
 #include <sensor_msgs/Imu.h>
-
+#include <diagnostic_msgs/KeyValue.h>
 //m - personal
+
 #include "alice_msgs/BalanceParam.h"
 #include "alice_msgs/ForceTorque.h"
 #include "alice_msgs/FoundObjectArray.h"
@@ -99,7 +100,7 @@ public:
 	void environmentDetectorMsgCallback(const alice_msgs::FoundObjectArray::ConstPtr& msg);
 	void detectedObjectsMsgCallback(const alice_msgs::FoundObjectArray::ConstPtr& msg);
 
-	void headMovingMsgCallback(const std_msgs::UInt8::ConstPtr& msg);
+	void headMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg);
 
 
 	void ballTestMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);
@@ -151,6 +152,7 @@ private:
 	void arm_motion();
 
 	uint8_t command;
+	bool arm_motion_run;
 
 	//tracking control function
 	void updateBalanceParameter();

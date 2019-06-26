@@ -48,23 +48,23 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   //arm
   l_shoulder_pitch_goal = 0;
   r_shoulder_pitch_goal = 0;
-  /*
-  l_shoulder_roll_goal = 0;
-  r_shoulder_roll_goal = 0;
-  l_elbow_pitch_goal = 0;
-  r_elbow_pitch_goal = 0;
-   */
+
+  //l_shoulder_roll_goal = 0;
+  //r_shoulder_roll_goal = 0;
+  //l_elbow_pitch_goal = 0;
+  //r_elbow_pitch_goal = 0;
+
   head_yaw_goal = 0;
   head_pitch_goal = 0;
 
   l_shoulder_pitch_trj -> initial_pose = 0;
   r_shoulder_pitch_trj -> initial_pose = 0;
-  /*
-  l_shoulder_roll_trj -> initial_pose = 0;
-  r_shoulder_roll_trj -> initial_pose = 0;
-  l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
-  r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
-   */
+
+  //l_shoulder_roll_trj -> initial_pose = 0;
+  //r_shoulder_roll_trj -> initial_pose = 0;
+  //l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
+  //r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
+
 
   head_yaw_trj -> initial_pose = 0;
   head_pitch_trj -> initial_pose = 20*DEGREE2RADIAN;
@@ -72,12 +72,22 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
 
   l_shoulder_pitch_trj -> current_pose = 0;
   r_shoulder_pitch_trj -> current_pose = 0;
-  /*
-  l_shoulder_roll_trj -> current_pose = 0;
-  r_shoulder_roll_trj -> current_pose = 0;
-  l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
-  r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
-   */
+
+  //l_shoulder_roll_trj -> current_pose = 0;
+  //r_shoulder_roll_trj -> current_pose = 0;
+  //l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
+  //r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
+
+  l_shoulder_pitch_goal = 0;
+  r_shoulder_pitch_goal = 0;
+
+  //l_shoulder_roll_goal = 0;
+  //r_shoulder_roll_goal = 0;
+
+  //l_elbow_pitch_goal = -90*DEGREE2RADIAN;
+  //r_elbow_pitch_goal = 90*DEGREE2RADIAN;
+
+
   head_yaw_trj -> current_pose = 0;
   head_pitch_trj -> current_pose = 0;
 
@@ -160,7 +170,10 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   {
     if(alice_id_ =="2")
     {
-      arm_motion();
+      if(arm_motion_run)
+      {
+        arm_motion();
+      }
       result_[joint_id_to_name_[9]] -> goal_position_  = result_rad_waist_ (3,0); // waist yaw
     }
 
@@ -175,7 +188,9 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
     //ROS_INFO("HEAD PITCH :%f   | %d",alice_id_biased_*result_rad_head_(4,0),alice_id_biased_);
     result_[joint_id_to_name_[7]]-> goal_position_  =  result_rad_head_(4,0);
     result_[joint_id_to_name_[8]]-> goal_position_  =  result_rad_head_(3,0);
+
   }
+
 
   /*	temp_pre_roll  = temp_head_roll;
 	temp_pre_pitch = temp_head_pitch;
@@ -221,7 +236,7 @@ void UpperBodyModule::updateBalanceParameter()
 
 void UpperBodyModule::scanning_motion()
 {
-  ROS_INFO("SCAN MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
+  //ROS_INFO("SCAN MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
 
   if(motion_num_scanning > head_scan_motion_data_.size()+1)
     return;
@@ -255,7 +270,7 @@ void UpperBodyModule::scanning_motion()
 }
 void UpperBodyModule::finding_motion()
 {
-  ROS_INFO("FIND MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
+  //ROS_INFO("FIND MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
 
  if(motion_num_finding > head_find_motion_data_.size())
   {
@@ -335,7 +350,7 @@ void UpperBodyModule::tracking_function()
 
 void UpperBodyModule::algorithm_process(uint8_t command_)
 {
-
+  //ROS_INFO("COMMAND :: %d",command_ );
   if(command_ == 0)
   {
     waist_end_point_(3,7)  = 3.0;

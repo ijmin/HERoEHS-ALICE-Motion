@@ -1192,7 +1192,7 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
 
   if(tan2<0)
     tan2 += 2*M_PI;
-  reference_body_msg_.z = tan2;
+  reference_body_msg_.z= tan2;
 
   if(isRunning())
   {
