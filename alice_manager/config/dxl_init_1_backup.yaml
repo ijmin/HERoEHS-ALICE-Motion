@@ -1,203 +1,138 @@
-l_hip_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_hip_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-l_hip_roll:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_hip_roll: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-l_hip_yaw:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_hip_yaw: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-l_knee_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_knee_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-l_ankle_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_ankle_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-l_ankle_roll:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+l_ankle_roll: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
 
-r_hip_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_hip_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-r_hip_roll:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_hip_roll: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-r_hip_yaw:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_hip_yaw: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-r_knee_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_knee_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-r_ankle_pitch:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_ankle_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
-r_ankle_roll:
-  position_d_gain: 400
-  position_i_gain: 0
-  position_p_gain: 1700
-  feedforward_1st_gain: 500
+r_ankle_roll: 
   return_delay_time: 10
   second_goal_pos_addr1: 564
   second_goal_pos_addr2: 565
   second_goal_pos_addr3: 566
   second_goal_pos_addr4: 567
 
-head_pitch:
-  position_p_gain: 850
+head_pitch: 
   return_delay_time: 10
-  max_position_limit: 3075
-  min_position_limit: 1024
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-head_yaw:
-  position_p_gain: 850
+head_yaw: 
   return_delay_time: 10
-  max_position_limit: 3075
-  min_position_limit: 1024
+  #max_position_limit: 3075
+  #min_position_limit: 1024
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
   
-waist_pitch:
-  position_p_gain: 850
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
-waist_yaw:
-  position_p_gain: 850
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
   
 
-l_shoulder_pitch:
-  position_p_gain: 850
+l_shoulder_pitch: 
   return_delay_time: 10 
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-l_shoulder_roll:
-  position_p_gain: 850
-  return_delay_time: 10
-  second_goal_pos_addr1: 116
-  second_goal_pos_addr2: 117
-  second_goal_pos_addr3: 118
-  second_goal_pos_addr4: 119
-l_elbow_pitch:
-  position_p_gain: 850
+
+l_elbow_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
   
-r_shoulder_pitch:
-  position_p_gain: 850
+r_shoulder_pitch: 
   return_delay_time: 10 
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-r_shoulder_roll:
-  position_p_gain: 850
+
+r_elbow_pitch: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
-r_elbow_pitch:
-  position_p_gain: 850
+  
+  #############
+l_shoulder_roll: 
+  return_delay_time: 10 
+  second_goal_pos_addr1: 116
+  second_goal_pos_addr2: 117
+  second_goal_pos_addr3: 118
+  second_goal_pos_addr4: 119
+
+r_shoulder_roll: 
   return_delay_time: 10
   second_goal_pos_addr1: 116
   second_goal_pos_addr2: 117
   second_goal_pos_addr3: 118
   second_goal_pos_addr4: 119
+  
+  
 
 
 
