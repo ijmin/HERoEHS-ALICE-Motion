@@ -68,6 +68,9 @@ private:
   void imuDataOutputCallback(const sensor_msgs::Imu::ConstPtr &msg);
   void ftDataOutputCallback(const diana_msgs::ForceTorque::ConstPtr &msg);
 
+
+  void bodysumInitializeCallback(const geometry_msgs::Vector3::ConstPtr &msg);
+
   /* ROS Service Callback Functions */
   bool setBalanceParamServiceCallback(alice_walking_module_msgs::SetBalanceParam::Request  &req,
       alice_walking_module_msgs::SetBalanceParam::Response &res);
@@ -151,7 +154,9 @@ private:
   //yitaek test
   ros::Publisher reference_zmp_pub_;
   ros::Publisher reference_body_pub_;
+
   ros::Publisher reference_body_sum_pub_;
+
   ros::Publisher foot_right_pub_;
   ros::Publisher foot_left_pub_;
 

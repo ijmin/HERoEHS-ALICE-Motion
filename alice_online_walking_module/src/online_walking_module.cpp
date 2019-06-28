@@ -239,6 +239,11 @@ void OnlineWalkingModule::queueThread()
   ros::Subscriber imu_data_sub = ros_node.subscribe("/imu/data", 3, &OnlineWalkingModule::imuDataOutputCallback,        this);
   ros::Subscriber ft_data_sub  = ros_node.subscribe("/alice/force_torque_data", 3, &OnlineWalkingModule::ftDataOutputCallback, this);
 
+
+  /* global body sum init */
+  ros::Subscriber initialize_body_sum_position_sub  = ros_node.subscribe("/heroehs/alice_reference_body_sum_init", 3, &OnlineWalkingModule::bodysumInitializeCallback, this);
+
+
   ros::WallDuration duration(control_cycle_msec_ / 1000.0);
   if(ros::param::get("gazebo", gazebo_) == false)
     gazebo_ = false;
@@ -980,6 +985,13 @@ bool OnlineWalkingModule::checkBalanceOnOff()
   }
   else
     return true;
+}
+
+void OnlineWalkingModule::bodysumInitializeCallback(const geometry_msgs::Vector3::ConstPtr &msg)
+{
+  reference_body_sum_msg_.x = msg->x;
+  reference_body_sum_msg_.y = msg->y;
+  reference_body_sum_msg_.z = msg->z;
 }
 
 void OnlineWalkingModule::imuDataOutputCallback(const sensor_msgs::Imu::ConstPtr &msg)
