@@ -439,7 +439,7 @@ ankle_length_m: 0.117
 leg_side_offset_m: 0.16
 foot_pose: [0.0, 0.08, 0.45, 0, 0, 0]
 lipm_height_m: 0.476
-total_mass: 18.4
+total_mass: 21.65
 online_walking_pelvis_h: 0.6 #0.634
 y_steptype_y_offeset: 0.06
 y_steptype_yaw_offeset: 20
