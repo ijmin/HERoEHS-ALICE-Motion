@@ -443,4 +443,4 @@ total_mass: 21.65
 online_walking_pelvis_h: 0.6 #0.634
 y_steptype_y_offeset: 0.06
 y_steptype_yaw_offeset: 20
-
+default_y_offset_foot: 0.09

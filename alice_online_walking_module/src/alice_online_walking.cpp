@@ -90,6 +90,7 @@ void ALICEOnlineWalking::readKinematicsYamlData()
   total_mass_= kinematics_doc["total_mass"].as<double>();
   online_walking_pelvis_h_= kinematics_doc["online_walking_pelvis_h"].as<double>();
   lipm_height_m_=kinematics_doc["lipm_height_m"].as<double>();
+  default_foot_y_offset_=kinematics_doc["default_y_offset_foot"].as<double>();
 }
 
 
@@ -102,10 +103,10 @@ void ALICEOnlineWalking::initialize(double control_cycle_sec)
 
   // global frame 에서 의 좌표
   robotis_framework::Pose3D r_foot, l_foot, pelvis;
-  r_foot.x = 0.0;    r_foot.y = -pelvis_to_hip_;  r_foot.z = 0.0;
+  r_foot.x = 0.0;    r_foot.y = -default_foot_y_offset_;  r_foot.z = 0.0;
   r_foot.roll = 0.0; r_foot.pitch = 0.0; r_foot.yaw = 0;
 
-  l_foot.x = 0.0;    l_foot.y = pelvis_to_hip_;   l_foot.z = 0.0;
+  l_foot.x = 0.0;    l_foot.y = default_foot_y_offset_;   l_foot.z = 0.0;
   l_foot.roll = 0.0; l_foot.pitch = 0.0; l_foot.yaw = 0;
 
   pelvis.x = 0.0;    pelvis.y = 0.0;     pelvis.z = online_walking_pelvis_h_;

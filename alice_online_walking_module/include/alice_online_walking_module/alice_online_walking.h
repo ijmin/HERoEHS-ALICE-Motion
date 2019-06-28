@@ -38,6 +38,7 @@ public:
   double pelvis_to_hip_, total_mass_;
   double online_walking_pelvis_h_;
   double lipm_height_m_;
+  double default_foot_y_offset_;
 
   void addStepData(robotis_framework::StepData& step_data);
   void eraseLastStepData();
