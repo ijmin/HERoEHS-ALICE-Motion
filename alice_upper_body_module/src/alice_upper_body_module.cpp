@@ -144,9 +144,17 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   //std::cout << "---------------" << std::endl;
   //std::cout << result_rad_head_ << std::endl;
-  head_end_point_(3,1) = limitCheck(head_end_point_(3,1),60,-60);
-  head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
 
+  if(head_end_point_(4,1)>38*DEGREE2RADIAN)
+  {
+    head_end_point_(3,1) = limitCheck(head_end_point_(3,1),5,-5);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
+  }
+  else if(head_end_point_(4,1)<=38*DEGREE2RADIAN)
+  {
+    head_end_point_(3,1) = limitCheck(head_end_point_(3,1),90,-90);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
+  }
   result_rad_head_  = end_to_rad_head_  -> cal_end_point_to_rad(head_end_point_);
 
 
@@ -272,7 +280,7 @@ void UpperBodyModule::finding_motion()
 {
   //ROS_INFO("FIND MOTION : %d  |  %f",motion_num_scanning,head_scan_time_data_[motion_num_scanning-1]);
 
- if(motion_num_finding > head_find_motion_data_.size())
+  if(motion_num_finding > head_find_motion_data_.size())
   {
     motion_num_finding=1;
     current_time_finding=0;
