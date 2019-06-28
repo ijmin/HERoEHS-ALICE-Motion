@@ -315,11 +315,11 @@ void UpperBodyModule::tracking_function()
   control_angle_yaw_temp   = pidController_x->PID_calculate(desired_x, current_x);
   control_angle_pitch_temp = pidController_y->PID_calculate(desired_y, current_y);
 
-  if(fabs(desired_x - current_x) < 25)
+  if(fabs(desired_x - current_x) < 50)
   {
     control_angle_yaw_temp = 0;
   }
-  if(fabs(desired_y - current_y) < 15)
+  if(fabs(desired_y - current_y) < 30)
   {
     control_angle_pitch_temp = 0;
   }
