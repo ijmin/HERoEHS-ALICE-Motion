@@ -1214,9 +1214,9 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
   }
   else
   {
-    reference_body_sum_msg_.x += reference_body_msg_.x;
-    reference_body_sum_msg_.y += reference_body_msg_.y;
-    reference_body_sum_msg_.z += reference_body_msg_.z;
+    reference_body_sum_msg_.x += 0; //reference_body_msg_.x;
+    reference_body_sum_msg_.y += 0; //reference_body_msg_.y;
+    reference_body_sum_msg_.z += 0; //reference_body_msg_.z;
   }
   if(reference_body_sum_msg_.z>2*M_PI)
   {
