@@ -54,5 +54,16 @@ find:
     3 # 5
     ] 
     
+   
+
+ball_check: 
+  motion: 
+    1: [  0, 75, 0 ] #3
+
+
+  motion_time:
+    [
+    3 # 1
+    ] 
     
     

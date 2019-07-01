@@ -115,6 +115,9 @@ UpperBodyModule::UpperBodyModule()
 	current_time_finding = 0;
 	motion_num_finding = 1;
 
+  current_time_checking = 0;
+  motion_num_checking = 1;
+
 	current_time_arm_motion = 0;
 	motion_num_arm=1;
 
@@ -380,6 +383,10 @@ void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::Con
   else if(msg->key == "head_searching") //head search
   {
     command = 2;
+  }
+  else if(msg->key == "head_ball_check") //head search
+  {
+    command = 5;
   }
   else if(msg->key == "arm_motion") //arm
   {

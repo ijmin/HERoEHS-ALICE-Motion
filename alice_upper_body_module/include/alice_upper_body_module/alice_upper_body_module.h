@@ -148,6 +148,7 @@ private:
 	void algorithm_process(uint8_t command_);
 	void scanning_motion();
 	void finding_motion();
+  void checking_motion();
 	void tracking_function();
 	void arm_motion();
 
@@ -182,11 +183,12 @@ private:
 	//motion
 	double current_time_scanning;
 	int motion_num_scanning;
-	double motion_scan_status;
 
 	double current_time_finding;
 	int motion_num_finding;
-	double motion_find_status;
+
+  double current_time_checking;
+  int motion_num_checking;
 
 	double current_time_arm_motion;
 	int motion_num_arm;
@@ -231,8 +233,11 @@ private:
   std::vector<std::string> head_joint_data_;
   std::map<int, std::vector<double> > head_find_motion_data_;
   std::map<int, std::vector<double> > head_scan_motion_data_;
+  std::map<int, std::vector<double> > head_check_ball_motion_data_;
+
   std::vector<double> head_find_time_data_;
   std::vector<double> head_scan_time_data_;
+  std::vector<double> head_check_ball_time_data_;
 
 
 
