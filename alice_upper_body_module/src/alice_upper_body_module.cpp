@@ -57,35 +57,35 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   head_yaw_goal = 0;
   head_pitch_goal = 0;
 
-  l_shoulder_pitch_trj -> initial_pose = 0;
-  r_shoulder_pitch_trj -> initial_pose = 0;
+  l_shoulder_pitch_trj -> initial_pose = 30*DEGREE2RADIAN;
+  r_shoulder_pitch_trj -> initial_pose = -30*DEGREE2RADIAN;
 
-  l_shoulder_roll_trj -> initial_pose = 0;
-  r_shoulder_roll_trj -> initial_pose = 0;
-  l_elbow_pitch_trj -> initial_pose = -90*DEGREE2RADIAN;
-  r_elbow_pitch_trj -> initial_pose = 90*DEGREE2RADIAN;
+  l_shoulder_roll_trj -> initial_pose = 10*DEGREE2RADIAN;
+  r_shoulder_roll_trj -> initial_pose = -10*DEGREE2RADIAN;
+  l_elbow_pitch_trj -> initial_pose = -45*DEGREE2RADIAN;
+  r_elbow_pitch_trj -> initial_pose = 45*DEGREE2RADIAN;
 
 
   head_yaw_trj -> initial_pose = 0;
   head_pitch_trj -> initial_pose = 20*DEGREE2RADIAN;
 
 
-  l_shoulder_pitch_trj -> current_pose = 0;
-  r_shoulder_pitch_trj -> current_pose = 0;
+  l_shoulder_pitch_trj -> current_pose = 30*DEGREE2RADIAN;
+  r_shoulder_pitch_trj -> current_pose = -30*DEGREE2RADIAN;
 
-  l_shoulder_roll_trj -> current_pose = 0;
-  r_shoulder_roll_trj -> current_pose = 0;
-  l_elbow_pitch_trj -> current_pose = -90*DEGREE2RADIAN;
-  r_elbow_pitch_trj -> current_pose = 90*DEGREE2RADIAN;
+  l_shoulder_roll_trj -> current_pose = 10*DEGREE2RADIAN;
+  r_shoulder_roll_trj -> current_pose = -10*DEGREE2RADIAN;
+  l_elbow_pitch_trj -> current_pose = -45*DEGREE2RADIAN;
+  r_elbow_pitch_trj -> current_pose = 45*DEGREE2RADIAN;
 
-  l_shoulder_pitch_goal = 0;
-  r_shoulder_pitch_goal = 0;
+  l_shoulder_pitch_goal = 30*DEGREE2RADIAN;
+  r_shoulder_pitch_goal = -30*DEGREE2RADIAN;
 
-  l_shoulder_roll_goal = 0;
-  r_shoulder_roll_goal = 0;
+  l_shoulder_roll_goal = 10*DEGREE2RADIAN;
+  r_shoulder_roll_goal = -10*DEGREE2RADIAN;
 
-  l_elbow_pitch_goal = -90*DEGREE2RADIAN;
-  r_elbow_pitch_goal = 90*DEGREE2RADIAN;
+  l_elbow_pitch_goal = -45*DEGREE2RADIAN;
+  r_elbow_pitch_goal = 45*DEGREE2RADIAN;
 
 
   head_yaw_trj -> current_pose = 0;
