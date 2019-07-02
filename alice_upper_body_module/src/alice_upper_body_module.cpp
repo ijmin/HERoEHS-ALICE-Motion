@@ -199,6 +199,9 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   }
 
+  control_angle_yaw  = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
+  control_angle_pitch = end_to_rad_head_  ->cal_end_point_tra_betta->current_pose;
+
 
   /*	temp_pre_roll  = temp_head_roll;
 	temp_pre_pitch = temp_head_pitch;
