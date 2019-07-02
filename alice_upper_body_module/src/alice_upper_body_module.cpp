@@ -35,6 +35,7 @@ void UpperBodyModule::initialize(const int control_cycle_msec, robotis_framework
   result_rad_head_.resize(6,1);
   result_rad_head_.fill(0);
 
+
   head_end_point_(4,0) = 20*DEGREE2RADIAN; // pitch 초기값
   head_end_point_(4,1) = 20*DEGREE2RADIAN; //
 
@@ -145,28 +146,26 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   //std::cout << "---------------" << std::endl;
   //std::cout << result_rad_head_ << std::endl;
 
-  if(head_end_point_(4,1)>38*DEGREE2RADIAN)
+  if(head_end_point_(4,1)>35*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),5,-5);
-    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
   }
-  else if(head_end_point_(4,1)<=38*DEGREE2RADIAN)
+  else if(head_end_point_(4,1)<=35*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),90,-90);
-    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),75,0);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
   }
   result_rad_head_  = end_to_rad_head_  -> cal_end_point_to_rad(head_end_point_);
 
-
   waist_end_point_(3,1)   = limitCheck(waist_end_point_(3,1),60,-60);
-
   result_rad_waist_ = end_to_rad_waist_ -> cal_end_point_to_rad(waist_end_point_);
 
   //result_[joint_id_to_name_[7]]-> goal_position_  =  filter_head->lowPassFilter(temp_head_pitch, temp_pre_pitch, 0.01, 0.008);
   //result_[joint_id_to_name_[8]]-> goal_position_  =  filter_head->lowPassFilter(temp_head_yaw, temp_pre_yaw, 0.01, 0.008);
 
   result_rad_head_(3,0) =  limitCheck(result_rad_head_(3,0),90,-90);  //yaw
-  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),75,0);    //pitch
+  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),80,0);    //pitch
 
 
   if (isnan(result_rad_head_(4,0)) || isnan(result_rad_head_(3,0)))
