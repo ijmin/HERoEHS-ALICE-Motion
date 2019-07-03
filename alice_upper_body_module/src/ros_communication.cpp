@@ -424,10 +424,12 @@ void UpperBodyModule::ballTestParamMsgCallback(const std_msgs::Float64MultiArray
 	y_p_gain = msg->data[3];
 	y_d_gain = msg->data[4];
 
+	/*
 	if(x_p_gain == 0)
 	  command = 255;
 	else
 	  command = 3;
+  */
 
 	//printf("sec value ::  %f \n",balance_updating_duration_sec_ );
 	//printf("P value ::  %f \n",y_p_gain );
