@@ -145,13 +145,18 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   //std::cout << "---------------" << std::endl;
   //std::cout << result_rad_head_ << std::endl;
-
-  if(head_end_point_(4,1)>35*DEGREE2RADIAN)
+  
+  if(head_end_point_(4,1)>55*DEGREE2RADIAN)
   {
-    head_end_point_(3,1) = limitCheck(head_end_point_(3,1),5,-5);
+    head_end_point_(3,1) = limitCheck(head_end_point_(3,1),0,0);
     head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
   }
-  else if(head_end_point_(4,1)<=35*DEGREE2RADIAN)
+  else if(head_end_point_(4,1)>40*DEGREE2RADIAN)
+  {
+    head_end_point_(3,1) = limitCheck(head_end_point_(3,1),40,-40);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
+  }
+  else if(head_end_point_(4,1)<=40*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),90,-90);
     head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
@@ -358,11 +363,11 @@ void UpperBodyModule::tracking_function()
   control_angle_yaw_temp   = pidController_x->PID_calculate(desired_x, current_x);
   control_angle_pitch_temp = pidController_y->PID_calculate(desired_y, current_y);
 
-  if(fabs(desired_x - current_x) < 50)
+  if(fabs(desired_x - current_x) < 150)
   {
     control_angle_yaw_temp = 0;
   }
-  if(fabs(desired_y - current_y) < 30)
+  if(fabs(desired_y - current_y) < 90)
   {
     control_angle_pitch_temp = 0;
   }
