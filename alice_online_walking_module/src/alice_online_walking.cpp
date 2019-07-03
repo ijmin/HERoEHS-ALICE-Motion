@@ -506,17 +506,16 @@ void ALICEOnlineWalking::setCurrentFTSensorOutput(double rfx, double rfy, double
   mat_left_torque_(1,0) = current_left_ty_Nm_;
   mat_left_torque_(2,0) = current_left_tz_Nm_;
 
-  //  mat_right_force_  = mat_robot_to_rfoot_*mat_right_force_;
-  // mat_right_torque_ = mat_robot_to_rfoot_*mat_right_torque_;
-
+  mat_right_force_  = mat_robot_to_rfoot_*mat_right_force_;
+  mat_right_torque_ = mat_robot_to_rfoot_*mat_right_torque_;
   //  mat_right_force_ = mat_robot_right_foot_*mat_right_force_;
   //  mat_right_torque_= mat_robot_right_foot_*mat_right_torque_;
 
   mat_g_right_force_= mat_right_force_;
   mat_g_right_torque_ = mat_right_torque_;
 
-  // mat_left_force_  = mat_robot_to_lfoot_*mat_left_force_;
-  // mat_left_torque_ = mat_robot_to_lfoot_*mat_left_torque_;
+  mat_left_force_  = mat_robot_to_lfoot_*mat_left_force_;
+  mat_left_torque_ = mat_robot_to_lfoot_*mat_left_torque_;
   //  mat_left_force_  = mat_robot_left_foot_*mat_left_force_;
   //  mat_left_torque_ = mat_robot_left_foot_*mat_left_torque_;
 
