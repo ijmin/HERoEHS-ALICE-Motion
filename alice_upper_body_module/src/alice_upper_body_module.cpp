@@ -145,21 +145,21 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
 
   //std::cout << "---------------" << std::endl;
   //std::cout << result_rad_head_ << std::endl;
-  
+
   if(head_end_point_(4,1)>55*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),0,0);
-    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),85,0);
   }
   else if(head_end_point_(4,1)>40*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),40,-40);
-    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),85,0);
   }
   else if(head_end_point_(4,1)<=40*DEGREE2RADIAN)
   {
     head_end_point_(3,1) = limitCheck(head_end_point_(3,1),90,-90);
-    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),80,0);
+    head_end_point_(4,1) = limitCheck(head_end_point_(4,1),85,0);
   }
   result_rad_head_  = end_to_rad_head_  -> cal_end_point_to_rad(head_end_point_);
 
@@ -170,7 +170,7 @@ void UpperBodyModule::process(std::map<std::string, robotis_framework::Dynamixel
   //result_[joint_id_to_name_[8]]-> goal_position_  =  filter_head->lowPassFilter(temp_head_yaw, temp_pre_yaw, 0.01, 0.008);
 
   result_rad_head_(3,0) =  limitCheck(result_rad_head_(3,0),90,-90);  //yaw
-  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),80,0);    //pitch
+  result_rad_head_(4,0) =  limitCheck(result_rad_head_(4,0),85,0);    //pitch
 
 
   if (isnan(result_rad_head_(4,0)) || isnan(result_rad_head_(3,0)))
@@ -489,6 +489,27 @@ void UpperBodyModule::algorithm_process(uint8_t command_)
 
     checking_motion();
   }
+  else if(command_ == 6)//
+  {
+    waist_end_point_(3, 7)  = 3.0;
+    head_end_point_(3, 7)   = 3.0;
+    head_end_point_(4, 7)   = 3.0;
+
+    current_time_scanning = 0.0;
+    motion_num_scanning = 1;
+    current_time_finding = 0;
+    motion_num_finding = 1;
+    current_time_checking = 0;
+    motion_num_checking = 1;
+
+    waist_end_point_(3, 1) = 0; // yaw  트레젝토리 6 * 8 은 xyz yaw(z) pitch(y) roll(x) 이며 8은 처음 위치 나중 위치 / 속도 속도 / 가속도 가속도 / 시간 시간 / 임
+    head_end_point_(3, 1)  = 0; // yaw  트레젝토리 6 * 8 은 xyz yaw(z) pitch(y) roll(x) 이며 8은 처음 위치 나중 위치 / 속도 속도 / 가속도 가속도 / 시간 시간 / 임
+    head_end_point_(4, 1)  = 20*DEGREE2RADIAN;
+
+    control_angle_yaw   = end_to_rad_head_  ->cal_end_point_tra_alpha->current_pose;
+    control_angle_pitch = end_to_rad_head_  ->cal_end_point_tra_betta->current_pose;
+
+  }
   else if(command_ == 4)//
   {
     waist_end_point_(3, 7)  = 3.0;
@@ -568,13 +589,13 @@ void UpperBodyModule::parse_motion_data(const std::string &type, const std::stri
 
 
     head_motion_node = doc["ball_check"];
-      head_check_ball_time_data_ = head_motion_node["motion_time"].as<std::vector<double> >();
-      head_motion_joint_node = head_motion_node["motion"];
-      for(YAML::iterator it = head_motion_joint_node.begin(); it != head_motion_joint_node.end(); ++it)
-      {
-        int head_numb = it->first.as<int>();
-        head_check_ball_motion_data_[head_numb]=head_motion_joint_node[head_numb].as<std::vector<double> >();
-      }
+    head_check_ball_time_data_ = head_motion_node["motion_time"].as<std::vector<double> >();
+    head_motion_joint_node = head_motion_node["motion"];
+    for(YAML::iterator it = head_motion_joint_node.begin(); it != head_motion_joint_node.end(); ++it)
+    {
+      int head_numb = it->first.as<int>();
+      head_check_ball_motion_data_[head_numb]=head_motion_joint_node[head_numb].as<std::vector<double> >();
+    }
 
   }
 }

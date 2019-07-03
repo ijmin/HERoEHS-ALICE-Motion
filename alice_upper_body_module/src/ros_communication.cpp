@@ -388,6 +388,10 @@ void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::Con
   {
     command = 5;
   }
+  else if(msg->key == "head_stop") //head search
+  {
+    command = 6;
+  }
   else if(msg->key == "arm_motion") //arm
   {
     if(msg->value == "1") //on
