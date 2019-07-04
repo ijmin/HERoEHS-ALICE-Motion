@@ -165,6 +165,7 @@ void UpperBodyModule::queueThread()
 	//detected_objects_sub = ros_node.subscribe("/heroehs/detected_objects", 5, &UpperBodyModule::detectedObjectsMsgCallback, this);
 
 	head_moving_sub = ros_node.subscribe("/heroehs/alice/head_command", 5, &UpperBodyModule::headMovingMsgCallback, this);
+	arm_moving_sub = ros_node.subscribe("/heroehs/alice/arm_command", 5, &UpperBodyModule::armMovingMsgCallback, this);
 
 	// test desired pose
 	head_test = ros_node.subscribe("/desired_pose_head", 5, &UpperBodyModule::desiredPoseHeadMsgCallback, this);
@@ -373,6 +374,22 @@ void UpperBodyModule::detectedObjectsMsgCallback(const alice_msgs::FoundObjectAr
 
 }
 
+void UpperBodyModule::armMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg)
+{
+
+  if(msg->key == "arm_motion") //arm
+  {
+    if(msg->value == "1") //on
+    {
+      arm_motion_run = true;
+    }
+    else if(msg->value == "0") //off
+    {
+      arm_motion_run = false;
+    }
+  }
+
+}
 void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg)
 {
 
@@ -392,6 +409,7 @@ void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::Con
   {
     command = 6;
   }
+  /*
   else if(msg->key == "arm_motion") //arm
   {
     if(msg->value == "1") //on
@@ -403,6 +421,7 @@ void UpperBodyModule::headMovingMsgCallback(const diagnostic_msgs::KeyValue::Con
       arm_motion_run = false;
     }
   }
+  */
 
 
   /*command = msg -> data;

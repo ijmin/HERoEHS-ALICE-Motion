@@ -85,6 +85,7 @@ public:
 	ros::Subscriber environment_detector_sub;
 	ros::Subscriber detected_objects_sub;
 	ros::Subscriber head_moving_sub;
+	ros::Subscriber arm_moving_sub;
 
 	ros::Subscriber ball_test_sub;
 	ros::Subscriber ball_param_sub;
@@ -101,6 +102,7 @@ public:
 	void detectedObjectsMsgCallback(const alice_msgs::FoundObjectArray::ConstPtr& msg);
 
 	void headMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg);
+	void armMovingMsgCallback(const diagnostic_msgs::KeyValue::ConstPtr& msg);
 
 
 	void ballTestMsgCallback(const std_msgs::Float64MultiArray::ConstPtr& msg);

@@ -14,6 +14,6 @@ motion:
 
 motion_time:
   [
-  2,   # base 2 motion1
-  2
+  1,   # base 2 motion1
+  1
   ] 
