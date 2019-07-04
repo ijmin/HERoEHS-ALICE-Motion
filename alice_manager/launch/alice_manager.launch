@@ -40,6 +40,8 @@
     <node name="alice_manager_node" pkg="alice_manager" type="alice_manager_node" output="screen"/>
     <!--<node name="decision_module" pkg="decision_module" type="decision_module" output="screen"/>-->
     
+    <node name="alice_log" pkg="alice_log" type="alice_log"/>
+    	
     <!-- sensors -->
     <!-- <node name="ft_node" pkg="diana_sensors" type="ft_node"/>-->
 
