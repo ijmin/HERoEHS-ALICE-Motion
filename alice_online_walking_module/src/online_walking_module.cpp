@@ -1206,8 +1206,8 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
   else
     tan2 = atan2(online_walking->mat_g_to_pelvis_(1,0),online_walking->mat_g_to_pelvis_(0,0));
 
-  //if(tan2<0)
-  //  tan2 += 2*M_PI;
+  if(tan2<0)
+    tan2 += 2*M_PI;
   reference_body_msg_.z= tan2;
 
   if(isRunning())
@@ -1222,7 +1222,7 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
     reference_body_sum_msg_.y += 0; //reference_body_msg_.y;
     reference_body_sum_msg_.z += 0; //reference_body_msg_.z;
   }
-  /*
+
   if(reference_body_sum_msg_.z>2*M_PI)
   {
     reference_body_sum_msg_.z -= 2*M_PI;
@@ -1231,7 +1231,7 @@ void OnlineWalkingModule::process(std::map<std::string, robotis_framework::Dynam
   {
     reference_body_sum_msg_.z += 2*M_PI;
   }
-  */
+
   reference_body_priv_msg_.x = reference_body_msg_.x;
   reference_body_priv_msg_.y = reference_body_msg_.y;
   reference_body_priv_msg_.z = reference_body_msg_.z;
